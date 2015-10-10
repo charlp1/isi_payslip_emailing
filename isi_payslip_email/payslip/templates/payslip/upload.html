@@ -20,7 +20,42 @@
 
 <body>
 
-    <div class="container">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            <span class="navbar-brand">
+                ISI Payslip Email
+            </span>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+                <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                          Payslip
+                      <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="/payslip/send">Send</a></li>
+                        <li><a href="/payslip/upload">Upload</a></li>
+                      </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="{% url 'django.contrib.auth.views.logout' %}">LOG OUT</a>
+                </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container upload-form">
 
         <!-- The fileinput-button span is used to style the file input field as button -->
         <span class="btn btn-success fileinput-button">
@@ -29,12 +64,16 @@
             <!-- The file input field used as target for the file upload widget -->
             <input id="fileupload" type="file" name="files[]" multiple>
         </span>
+        <br/>
+        <br/>
         <!-- The global progress bar -->
         <div id="progress" class="progress">
             <div class="progress-bar progress-bar-success"></div>
         </div>
         <!-- The container for the uploaded files -->
         <div id="files" class="files"></div>
+
+        <div id="upload-alert" class="alert alert-success" role="alert">Successfully uploaded!</div>
 
     </div>
 
@@ -47,8 +86,11 @@
 
         $(function () {
 
+            $( ".alert" ).hide();
+
             // Change this to the location of your server-side upload handler:
             var url = "payslip/upload";
+            var uploadAlert = $("#upload-alert");
 
             $('#fileupload').fileupload({
                 url: url,
@@ -57,9 +99,12 @@
                     xhr.setRequestHeader( "X-CSRFToken", "{{ csrf_token }}" );
                 },
                 done: function (e, data) {
-                    $.each(data.result.files, function (index, file) {
-                        $('<p/>').text(file.name).appendTo('#files');
-                    });
+                    if ( data.result.status === "ok" ) {
+                        uploadAlert.show();
+                    }
+                    setTimeout( function() {
+                        uploadAlert.hide();
+                    }, 3000 );
                 },
                 progressall: function (e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);

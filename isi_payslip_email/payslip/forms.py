@@ -7,12 +7,19 @@ from datetime import datetime
 
 from .models import Payslip
 
-PAYSLIP_CHOICES = [[d, d] for d in listdir(settings.MEDIA_ROOT) if path.isdir(path.join(settings.MEDIA_ROOT, d))]
+def get_payslip_choices():
+    # you place some logic here
+    return [[d, d] for d in listdir(settings.MEDIA_ROOT) if path.isdir(path.join(settings.MEDIA_ROOT, d))]
 
 
 class SendPayslipForm(forms.Form):
 
-    payslip_path = forms.ChoiceField(choices=PAYSLIP_CHOICES)
+    payslip_path = forms.ChoiceField(choices=get_payslip_choices())
+
+    def __init__(self, *args, **kwargs):
+        super(SendPayslipForm, self).__init__(*args, **kwargs)
+        self.fields['payslip_path'] = forms.ChoiceField(
+            choices=get_payslip_choices())
 
     def clean_payslip_path(self):
         payslip_path = self.cleaned_data.get("payslip_path")

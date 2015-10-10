@@ -1,3 +1,15 @@
-from django.shortcuts import render
+from __future__ import absolute_import
+from django.core.exceptions import ObjectDoesNotExist
+from django.views.generic import TemplateView
 
-# Create your views here.
+
+class PayslipSendView(TemplateView):
+    template_name = 'payslip/index.html'
+
+
+
+
+
+
+
+

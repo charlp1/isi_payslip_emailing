@@ -1,1 +1,5 @@
-Payslip Send View
+ <form method="post" action="/payslip/send/">
+     {% csrf_token %}
+{{ form }}
+<input type="submit" value="Send Payslip" class=" btn btn-success">
+</form>

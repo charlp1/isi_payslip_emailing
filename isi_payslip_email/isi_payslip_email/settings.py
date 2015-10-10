@@ -84,8 +84,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "isi_payslip_email",
-        "USER": "panasco",                      # Not used with sqlite3.
-        "PASSWORD": "panasco",
+        "USER": "root",                      # Not used with sqlite3.
+        "PASSWORD": "",
         "HOST": "localhost",
         "TEST_CHARSET" : "utf8",
         "TEST_COLLATION": "utf8_general_ci"
@@ -114,6 +114,7 @@ STATIC_URL = '/static/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+
 COMPANY_EMAIL = "inovouze@gmail.com"
 
 LOGIN_URL = '/login/'
@@ -121,3 +122,35 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 STATIC_URL = '/static/'
+
+# Email Server Settings. Change as needed
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'mbdiamondx1@gmail.com'
+EMAIL_HOST_PASSWORD = 'jonel1234'
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+COMPANY_EMAIL = "innovouze@gmail.com"
+
+PAYSLIP_PATH_SEPARATOR = "Payslip -"
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler'
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        }
+    }
+}

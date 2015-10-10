@@ -19,3 +19,6 @@ class Payslip(models.Model):
     filename = models.FileField('Payslip Filename', default='')
     date_release = models.DateTimeField('Date Release', default=None)
     created = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.employee.name

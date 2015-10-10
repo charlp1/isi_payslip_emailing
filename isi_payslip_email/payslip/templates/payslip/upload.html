@@ -1,0 +1,75 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+
+    <meta charset="UTF-8">
+    <meta name="description" content="File Upload widget with multiple file selection, drag&amp;drop support and progress bar for jQuery. Supports cross-domain, chunked and resumable file uploads. Works with any server-side platform (PHP, Python, Ruby on Rails, Java, Node.js, Go etc.) that supports standard HTML form file uploads.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payslip - Upload</title>
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- Generic page styles -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="{% static 'css/jquery.fileupload.css' %}">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- The fileinput-button span is used to style the file input field as button -->
+        <span class="btn btn-success fileinput-button">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>Select files...</span>
+            <!-- The file input field used as target for the file upload widget -->
+            <input id="fileupload" type="file" name="files[]" multiple>
+        </span>
+        <!-- The global progress bar -->
+        <div id="progress" class="progress">
+            <div class="progress-bar progress-bar-success"></div>
+        </div>
+        <!-- The container for the uploaded files -->
+        <div id="files" class="files"></div>
+
+    </div>
+
+    <script src='{% static "jquery.min.js" %}'></script>
+    <script src='{% static "jquery.ui.widget.js" %}'></script>
+    <script src='{% static "jquery.iframe-transport.js" %}'></script>
+    <script src='{% static "jquery.fileupload.js" %}'></script>
+
+    <script>
+
+        $(function () {
+
+            // Change this to the location of your server-side upload handler:
+            var url = "payslip/upload";
+
+            $('#fileupload').fileupload({
+                url: url,
+                dataType: 'json',
+                done: function (e, data) {
+                    $.each(data.result.files, function (index, file) {
+                        $('<p/>').text(file.name).appendTo('#files');
+                    });
+                },
+                progressall: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .progress-bar').css(
+                        'width',
+                        progress + '%'
+                    );
+                }
+            }).prop('disabled', !$.support.fileInput)
+                .parent().addClass($.support.fileInput ? undefined : 'disabled');
+        });
+
+    </script>
+
+</body>
+</html>

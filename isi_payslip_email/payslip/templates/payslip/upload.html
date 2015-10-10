@@ -53,6 +53,9 @@
             $('#fileupload').fileupload({
                 url: url,
                 dataType: 'json',
+                beforeSend: function( xhr, data ) {
+                    xhr.setRequestHeader( "X-CSRFToken", "{{ csrf_token }}" );
+                },
                 done: function (e, data) {
                     $.each(data.result.files, function (index, file) {
                         $('<p/>').text(file.name).appendTo('#files');

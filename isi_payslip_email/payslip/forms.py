@@ -1,4 +1,4 @@
-from os import path
+from os import path, listdir
 from django import forms
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -7,9 +7,12 @@ from datetime import datetime
 
 from .models import Payslip
 
+PAYSLIP_CHOICES = [[d, d] for d in listdir(settings.MEDIA_ROOT) if path.isdir(path.join(settings.MEDIA_ROOT, d))]
+
+
 class SendPayslipForm(forms.Form):
 
-    payslip_path = forms.CharField(label="Payslips")
+    payslip_path = forms.ChoiceField(choices=PAYSLIP_CHOICES)
 
     def clean_payslip_path(self):
         payslip_path = self.cleaned_data.get("payslip_path")

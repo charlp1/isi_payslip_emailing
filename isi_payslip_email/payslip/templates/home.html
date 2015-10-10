@@ -1,0 +1,24 @@
+{% load staticfiles %}
+
+
+    WELCOME
+    <a href="{% url 'django.contrib.auth.views.logout' %}">LOG OUT</a>
+    <br/><br/>
+    Employees tab
+    <a href="#" id="employee_tab">Employees</a>
+
+    <div id="container_emp_table">
+
+    </div>
+
+    <script>
+        var isi = isi || {};
+        isi.apiUrls = {
+            'employees' : "{% url 'employee' %}"
+        };
+    </script>
+
+    <script src='{% static "jquery.min.js" %}'></script>
+    <script src="{% static "js/jquery.dataTables.min.js" %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src='{% static "events.js" %}'></script>

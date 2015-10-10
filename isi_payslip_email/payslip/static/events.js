@@ -4,10 +4,13 @@
 
 $(document).ready(function(){
     $('#employee_tab').on('click', function(){
+
         $.ajax({
-            url: isi.apiUrls.employees
+            url: isi.apiUrls.employees,
+            type: 'GET'
         }).done(function(data){
-            alert('ajkfd');
+            $('#container_emp_table').html(data);
+            $('#emp_table').dataTable({"iDisplayLength": 15});
         });
     });
 });

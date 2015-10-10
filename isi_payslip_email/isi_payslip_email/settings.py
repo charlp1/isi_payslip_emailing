@@ -117,7 +117,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 COMPANY_EMAIL = "inovouze@gmail.com"
 
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/payslip'
 LOGOUT_REDIRECT_URL = '/'
 
 STATIC_URL = '/static/'

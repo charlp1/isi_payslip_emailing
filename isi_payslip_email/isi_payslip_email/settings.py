@@ -84,8 +84,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "isi_payslip_email",
-        "USER": "root",                      # Not used with sqlite3.
-        "PASSWORD": "",
+        "USER": "panasco",                      # Not used with sqlite3.
+        "PASSWORD": "panasco",
         "HOST": "localhost",
         "TEST_CHARSET" : "utf8",
         "TEST_COLLATION": "utf8_general_ci"
@@ -126,12 +126,12 @@ STATIC_URL = '/static/'
 # Email Server Settings. Change as needed
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'mbdiamondx1@gmail.com'
-EMAIL_HOST_PASSWORD = 'jonel1234'
+EMAIL_HOST_USER = 'isipslip@gmail.com'
+EMAIL_HOST_PASSWORD = 'isi123456'
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 COMPANY_EMAIL = "innovouze@gmail.com"
 

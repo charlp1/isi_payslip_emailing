@@ -1,7 +1,7 @@
 from os import path
 from django import forms
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from datetime import datetime
 
@@ -23,10 +23,12 @@ class SendPayslipForm(forms.Form):
         payslip_employee_pdf = path.join(settings.MEDIA_ROOT, payslip_path, pdf_filename)
 
         if path.isfile(payslip_employee_pdf):
-            body_message = render_to_string('payslip/send_payslip_message.txt', {'employee_name': employee.name})
-            email = EmailMessage(subject='Employee Payslip', body=body_message, from_email=settings.COMPANY_EMAIL,
+            body_message = render_to_string('payslip/send_payslip_message.html', {'employee_name': employee.name,
+                                                                                  'duration': payslip_path})
+            email = EmailMultiAlternatives(subject='Employee Payslip', body=body_message, from_email=settings.COMPANY_EMAIL,
                                  to=[employee.email], bcc=[employee.cc_email])
             email.attach_file(payslip_employee_pdf, 'application/pdf')
+            email.attach_alternative(body_message, 'text/html')
 
             if email.send(fail_silently=False):
                 precord = {'employee': employee, 'filename': pdf_filename, 'date_release': datetime.now()}

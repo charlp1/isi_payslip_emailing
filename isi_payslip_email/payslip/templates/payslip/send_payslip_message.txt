@@ -1,1 +1,3 @@
-{{employee_name}}
+ Greetings, {{ employee_name }}!!!!
+
+    This is your pay slip. Please use your money wisely. HAHAHAHAHAH

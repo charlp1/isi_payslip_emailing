@@ -15,7 +15,7 @@ from django.conf import settings
 from django.http import JsonResponse
 
 from .forms import SendPayslipForm
-from .models import Employee
+from .models import Employee, Payslip
 
 
 class Home(TemplateView):
@@ -26,12 +26,26 @@ class EmployeeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(EmployeeView, self).get_context_data(**kwargs)
+        context['table'] = True
 
-        make_emp = lambda u: {'name': u.name, 'email': u.email,
+        make_emp = lambda u: {'id':u.id, 'name': u.name, 'email': u.email,
                                'active': u.active, 'send_email': u.send_email,
                                'cc_email': u.cc_email}
-        emp = Employee.objects.all()
-        context['emp'] = [ make_emp(e) for e in emp ]
+
+        if(self.request.GET.get('id')):
+            id = int(self.request.GET.get('id'))
+            pslips = Payslip.objects.filter(employee=id)
+            context['payslips'] = []
+            for p in pslips:
+                context['payslips'].append({'name': p.filename.name, 'date': p.date_release})
+
+            context['emp'] = {'name' : p.employee.name, 'email' : p.employee.email, 'active' : p.employee.active}
+            context['table'] = False
+        else:
+            emp = Employee.objects.all()
+
+            context['emp'] = [ make_emp(e) for e in emp ]
+
         return context
 
 

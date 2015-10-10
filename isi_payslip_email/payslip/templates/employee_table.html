@@ -1,3 +1,4 @@
+{% if table %}
 <table id="emp_table" class="table table-striped table-hover table-bordered">
     <thead>
         <tr>
@@ -11,7 +12,7 @@
 
     {% for e in emp %}
         <tr>
-            <td>{{ e.name }}</td>
+            <td><a href="employee?id={{ e.id }}">{{ e.name }}</a></td>
             <td>{{ e.email }}</td>
             <td>{{ e.active }}</td>
             <td>{{ e.send_email }}</td>
@@ -20,3 +21,28 @@
 
     </tbody>
 </table>
+
+{% else %}
+
+        Name: {{ emp.name }}<br/>
+        Email: {{ emp.email }}<br/>
+        Active: {{ emp.active }}<br/><br/>
+        Files: <br/>
+        <table>
+            <thead>
+                <tr>
+                    <th>File</th>
+                    <th>Date Released</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in payslips %}
+                    <tr>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.date }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+{% endif %}

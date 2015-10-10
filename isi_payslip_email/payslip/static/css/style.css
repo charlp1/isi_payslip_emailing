@@ -6,6 +6,10 @@
     margin-top: 20px;
 }
 
-.upload-form, .send-form, .send-message {
+#container_emp_table .emp_table_container {
+    padding: 10px;
+}
+
+.upload-form, .send-form, .send-message, .emp_table_container {
      padding: 100px 20px;
 }

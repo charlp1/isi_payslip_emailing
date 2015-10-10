@@ -9,6 +9,9 @@ class Employee(models.Model):
     send_email = models.BooleanField('Send Email', default=False)
     cc_email = models.EmailField('CC Email')
 
+    def __str__(self):
+        return self.name
+
 
 class Payslip(models.Model):
 

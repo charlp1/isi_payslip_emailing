@@ -1,0 +1,11 @@
+.home {
+    padding: 10px;
+}
+
+.home-content {
+    margin-top: 20px;
+}
+
+.upload-form, .send-form {
+     padding: 100px 20px;
+}

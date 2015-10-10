@@ -1,1 +1,48 @@
-Successfully Emailed Payslip.
+{% load staticfiles %}
+
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        <span class="navbar-brand">
+            ISI Payslip Email
+        </span>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                      Payslip
+                  <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/payslip/send">Send</a></li>
+                    <li><a href="/payslip/upload">Upload</a></li>
+                  </ul>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="{% url 'django.contrib.auth.views.logout' %}">LOG OUT</a>
+            </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container send-message">
+    <div class="alert alert-success">
+        Successfully Emailed Payslip.
+    </div>
+</div>
+
+<script src='{% static "jquery.min.js" %}'></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>

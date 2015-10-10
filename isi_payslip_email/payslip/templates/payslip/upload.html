@@ -103,6 +103,7 @@
                         uploadAlert.show();
                     }
                     setTimeout( function() {
+                        $('#progress .progress-bar').css('width', 0);
                         uploadAlert.hide();
                     }, 3000 );
                 },

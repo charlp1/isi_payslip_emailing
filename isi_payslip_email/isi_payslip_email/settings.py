@@ -85,7 +85,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "isi_payslip_email",
         "USER": "panasco",                      # Not used with sqlite3.
-        "PASSWORD": "panasco",                  # Not used with sqlite3.
+        "PASSWORD": "panasco",
         "HOST": "localhost",
         "TEST_CHARSET" : "utf8",
         "TEST_COLLATION": "utf8_general_ci"
@@ -116,5 +116,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 COMPANY_EMAIL = "inovouze@gmail.com"
 
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = 'django.contrib.auth.views.login'
+LOGOUT_REDIRECT_URL = '/'
+
+STATIC_URL = '/static/'

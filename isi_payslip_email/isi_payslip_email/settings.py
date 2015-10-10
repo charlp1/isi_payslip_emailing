@@ -38,7 +38,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'payslip'
+
+    
+    'payslip',
+    'webapp'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -111,3 +114,6 @@ STATIC_URL = '/static/'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 COMPANY_EMAIL = "inovouze@gmail.com"
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = 'django.contrib.auth.views.login'

@@ -67,10 +67,11 @@ class PayslipUploadView(TemplateView):
         today = date_today.strftime('%d')
 
         f_day = get_first_day(date_today)
-        f = 16 if today > 15 else f_day.strftime('%d')
+        f = 16 if int(today) > 15 else f_day.strftime('%d')
 
         l_day = get_last_day(date_today)
-        pay_folder = "{0}-{1}-{2}".format(date_today.strftime('%Y-%m'), f, l_day.strftime('%d'))
+        l = l_day.strftime('%d') if int(today) > 15 else 15
+        pay_folder = "{0}-{1}-{2}".format(date_today.strftime('%Y-%m'), f, l)
         path = default_storage.save(join(settings.MEDIA_ROOT, pay_folder, data.name), ContentFile(data.read()))
 
 

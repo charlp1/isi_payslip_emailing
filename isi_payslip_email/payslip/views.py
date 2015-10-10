@@ -7,9 +7,10 @@ class PayslipSendView(TemplateView):
     template_name = 'payslip/index.html'
 
 
+class PayslipUploadView(TemplateView):
+    template_name = 'payslip/upload.html'
 
+    def post(self, request):
+        print("post", request)
 
-
-
-
-
+        return JSONResponse({})

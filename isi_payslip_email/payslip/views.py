@@ -12,7 +12,7 @@ from django.core.files.storage import default_storage
 from django.shortcuts import redirect
 from django.views.generic import FormView, TemplateView
 from django.conf import settings
-
+from django.http import JsonResponse
 
 from .forms import SendPayslipForm
 from .models import Employee
@@ -75,12 +75,7 @@ class PayslipUploadView(TemplateView):
         path = default_storage.save(join(settings.MEDIA_ROOT, pay_folder, data.name), ContentFile(data.read()))
 
 
-        response_kwargs = {
-            "request": self.request,
-            "template": self.template_name,
-            "context": self.get_context_data()
-        }
-        return self.response_class(**response_kwargs)
+        return JsonResponse({'status': 'ok'})
 
 
 def get_first_day(dt, d_years=0, d_months=0):

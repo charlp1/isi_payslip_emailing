@@ -84,8 +84,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "isi_payslip_email",
-        "USER": "root",                      # Not used with sqlite3.
-        "PASSWORD": "",                  # Not used with sqlite3.
+        "USER": "panasco",                      # Not used with sqlite3.
+        "PASSWORD": "panasco",                  # Not used with sqlite3.
         "HOST": "localhost",
         "TEST_CHARSET" : "utf8",
         "TEST_COLLATION": "utf8_general_ci"

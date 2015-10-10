@@ -12,7 +12,7 @@
 
     {% for e in emp %}
         <tr>
-            <td><a href="employee?id={{ e.id }}">{{ e.name }}</a></td>
+            <td><a href="payslip/employee/?id={{ e.id }}">{{ e.name }}</a></td>
             <td>{{ e.email }}</td>
             <td>{{ e.active }}</td>
             <td>{{ e.send_email }}</td>

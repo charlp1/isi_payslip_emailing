@@ -3,14 +3,21 @@
  */
 
 $(document).ready(function(){
-    $('#employee_tab').on('click', function(){
+
+    var employeeTableContainer = $( '#container_emp_table' );
+    var employeeTable = $( '#emp_table' );
+
+    var updateEmployeeTable = function() {
 
         $.ajax({
             url: isi.apiUrls.employees,
             type: 'GET'
         }).done(function(data){
-            $('#container_emp_table').html(data);
-            $('#emp_table').dataTable({"iDisplayLength": 15});
+            employeeTableContainer.html(data);
+            employeeTable.dataTable({"iDisplayLength": 15});
         });
-    });
+    };
+
+    $( '#employee_tab' ).on( 'click', updateEmployeeTable );
+
 });

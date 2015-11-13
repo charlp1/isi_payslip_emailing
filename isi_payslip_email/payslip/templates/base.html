@@ -1,0 +1,46 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="description" content="File Upload widget with multiple file selection, drag&amp;drop support and progress bar for jQuery. Supports cross-domain, chunked and resumable file uploads. Works with any server-side platform (PHP, Python, Ruby on Rails, Java, Node.js, Go etc.) that supports standard HTML form file uploads.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- Generic page styles -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block head %}
+
+    <title>ISI Payslip Email</title>
+
+    {% endblock %}
+</head>
+<body>
+
+    <div class="main-container container-fluid">
+
+        <div class="nav-container row">
+            {% include 'nav.html' %}
+        </div>
+
+        <div class="content-container row">
+            <div class="sidenav col-xs-2 col-md-2">
+                {% include 'sidenav.html' %}
+            </div>
+            <div class="content col-xs-10 col-md-10">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+
+        {% include 'scripts.html' %}
+
+        {% block scripts %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

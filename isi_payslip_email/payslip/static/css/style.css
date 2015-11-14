@@ -40,3 +40,7 @@ html, body {
     width: 80%;
     overflow: auto;
 }
+
+.employee_details {
+    font-size: 18px;
+}

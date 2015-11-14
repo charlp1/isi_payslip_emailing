@@ -3,7 +3,7 @@
 
 {% block head %}
 
-    <title>List of Employees</title>
+    <title>Employee Profile</title>
 
     <link rel="stylesheet" href="{% static 'css/jquery.fileupload.css' %}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
@@ -11,16 +11,22 @@
 {% endblock head %}
 
 {% block content %}
+    <h3>Employee Profile</h3>
 
-    Name: {{ emp.name }}<br/>
-    Email: {{ emp.email }}<br/>
-    Active: {{ emp.active }}<br/><br/>
-    Files: <br/>
+    <br/>
+    <div class="employee_details">
+        Name: {{ emp.name }}<br/>
+        Email: {{ emp.email }}<br/>
+        Active: {{ emp.active }}<br/><br/>
+        Payslips:
+    </div>
+
     <table id="payslip_table" class="table-hover">
         <thead>
             <tr>
                 <th>File</th>
                 <th>Date Released</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -28,10 +34,22 @@
                 <tr>
                     <td>{{ p.name }}</td>
                     <td>{{ p.date }}</td>
+                    <td>
+                        <button class="btn btn-success">Resend</button>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-
 {% endblock content %}
+
+{% block scripts %}
+    <script>
+        $('#payslip_table').dataTable({
+            'bSort': true,
+            'bPaginate': true,
+            'sPaginationType': 'full_numbers'
+        });
+    </script>
+{% endblock %}
 

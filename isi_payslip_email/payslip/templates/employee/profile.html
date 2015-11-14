@@ -2,9 +2,6 @@
 {% load staticfiles %}
 
 {% block head %}
-
-    <title>Employee Profile</title>
-
     <link rel="stylesheet" href="{% static 'css/jquery.fileupload.css' %}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
 
@@ -35,7 +32,10 @@
                     <td>{{ p.name }}</td>
                     <td>{{ p.date }}</td>
                     <td>
-                        <button class="btn btn-success">Resend</button>
+                        <button class="btn btn-success resend" id="{{ p.id }}" onclick="resend({{ p.id }})">Resend</button>
+                        <img class="tbl_img" id="spinner{{ p.id }}" src="{% static 'images/loading_spinner.gif' %}">
+                        <img class="tbl_img" id="success{{ p.id }}" src="{% static 'images/check_mark.png' %}">
+                        <img class="tbl_img" id="error{{ p.id }}" src="{% static 'images/error_mark.png' %}">
                     </td>
                 </tr>
             {% endfor %}
@@ -51,5 +51,6 @@
             'sPaginationType': 'full_numbers'
         });
     </script>
+    <script type="text/javascript" src="{% static 'resend_email.js' %}"></script>
 {% endblock %}
 

@@ -59,3 +59,9 @@ html, body {
 .employee_details {
     font-size: 18px;
 }
+
+.tbl_img{
+    width: 30px;
+    height: 30px;
+    display: none;
+}

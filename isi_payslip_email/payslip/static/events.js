@@ -44,6 +44,9 @@ amplify.request.define( "export", "ajax", {
 
  $('#see_reports').on('click', function(){
      var pid = $('#pid').val();
+     check_datatable($('#upload_tbl'));
+     check_datatable($('#sent_tbl'));
+     check_datatable($('#unsent_tbl'));
      amplify.request({
          resourceId: 'see_logs',
          data: {
@@ -60,6 +63,12 @@ amplify.request.define( "export", "ajax", {
          }
      })
  });
+
+function check_datatable(object){
+    if ($.fn.DataTable.isDataTable(object)) {
+        $(object).dataTable().fnDestroy();
+    }
+}
 
 function convert_table(object, data){
     $(object).dataTable({

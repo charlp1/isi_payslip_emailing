@@ -4,7 +4,7 @@ from django.conf.urls import include, url, patterns
 
 from .views import (Home, EmployeeView, PayslipSendView, PayslipUploadView,
                     MissingUploadedEmployeeAPIView, EmployeeProfile, PayslipSendAPIView,
-                    FolderContent, LogUploadedSendPayslipAPIView)
+                    FolderContent, LogUploadedSendPayslipAPIView, LogUploadedSendPayslipView)
 
 urlpatterns = patterns("",
                        url(r'^$', Home.as_view(), name='home'),
@@ -14,12 +14,17 @@ urlpatterns = patterns("",
                        url(r"^send/?$", PayslipSendView.as_view(), name="send-payslip"),
                        url(r"^upload/?$", PayslipUploadView.as_view(), name="upload-payslip")
                        )
-
+# api
 urlpatterns += patterns('',
                         url(r"^api/missing_employee/$", MissingUploadedEmployeeAPIView.as_view(),
                             name='missing_employees'),
                         url(r"^api/send/$", PayslipSendAPIView.as_view(),
                             name='send_email_payslip'),
                         url(r"^api/logs/upload_sent/$", LogUploadedSendPayslipAPIView.as_view(),
+                            name='logs_upload_sent_api')
+                        )
+# logs
+urlpatterns += patterns('',
+                        url(r"^logs/upload_sent/$", LogUploadedSendPayslipView.as_view(),
                             name='logs_upload_sent')
                         )

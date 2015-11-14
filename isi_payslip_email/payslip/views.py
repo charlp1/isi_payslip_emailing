@@ -13,7 +13,7 @@ from django.core.files.storage import default_storage
 from django.shortcuts import redirect
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView, TemplateView, ListView
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 
@@ -199,6 +199,12 @@ class PayslipSendAPIView(GenericAPIView):
                     payslip.employee.name, payslip.payslip_folder.name)})
 
         return JsonResponse(response)
+
+
+class LogUploadedSendPayslipView(ListView):
+    model = PayslipFolder
+    template_name = 'payslip/logs_update_sent.html'
+    context_object_name = 'payslip_folders'
 
 
 class LogUploadedSendPayslipAPIView(GenericAPIView):

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head %}
+
+    <title>Payslip - Logs</title>
+
+{% endblock head %}
+
+{% block content %}
+
+    <div class="send-form">
+            Select Payslip: <select>
+                <option value="">Select One</option>
+                {% for p in payslip_folders %}
+                    <option value="{{ p.pk }}">{{ p.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit"
+                   value="Go"
+                   id="See Reports"
+                   class="btn btn-success">
+    </div>
+    <br />
+    <!--Upload success result-->
+    <div class="col-md-6">
+        <div id="upload-success" class="panel panel-success">
+            <div class="status panel-heading">Uploaded</div>
+            <table class="result table"></table>
+        </div>
+    </div>
+
+    <!--Upload error result-->
+    <div class="col-md-6">
+        <div id="sent-success" class="panel panel-info">
+            <div class="status panel-heading">Sent</div>
+            <table class="result table"></table>
+        </div>
+    </div>
+
+{% endblock content %}

@@ -118,9 +118,9 @@ $(function () {
         var uploadSuccess = result.status === "ok";
 
         // List uploaded file
-        data.context = $( "<tr/>" );
+        data.context = $( '<li class="list-group-item" />' );
         $.each( data.files, function ( index, file ) {
-            var node = $( "<td />" ).html([
+            var node = $( "<div />" ).html([
                 "<span>",
                     file.name,
                 "</span>",

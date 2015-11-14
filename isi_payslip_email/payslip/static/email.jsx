@@ -18,7 +18,7 @@ var EmployeeInfo = React.createClass({
             "sending": (<i className="glyphicon glyphicon-refresh icon-refresh-animate"></i>),
             "success": (<i className="glyphicon glyphicon-ok"></i>),
             "error": (<i className="glyphicon glyphicon-remove"></i>),
-            "disable": (<i className="glyphicon glyphicon-ok"></i>),
+            "disable": (<i className="glyphicon glyphicon-ok"></i>)
         };
         var rowHighlight = {
             "ready": "active",
@@ -182,13 +182,12 @@ var EmailApp = React.createClass( {
         });
 
     },
-    "onClickSendEmail": function( e ) {
-
-        e.preventDefault();
+    "sendEmail": function() {
 
         // get list of employees checked
         // send request asynchronously
         var self = this;
+
         _.each( this.state.employees, function( employee ) {
 
             var send_status = employee.send_status;
@@ -223,6 +222,17 @@ var EmailApp = React.createClass( {
             }
 
         });
+
+    },
+    "onClickSendEmail": function( e ) {
+
+        e.preventDefault();
+
+        if ( !_.isEmpty( this.state.employees ) ) {
+
+            this.sendEmail();
+
+        }
 
     },
     "onClickSelectAll": function() {
@@ -277,6 +287,7 @@ var EmailApp = React.createClass( {
                 </div>
                 <div id="send-email-button">
                     <button className="btn btn-success flex-auto"
+                        disabled={ _.isEmpty( this.state.employees ) }
                         onClick={ this.onClickSendEmail }>
                         Send Email
                     </button>

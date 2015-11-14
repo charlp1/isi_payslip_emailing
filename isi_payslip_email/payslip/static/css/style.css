@@ -8,6 +8,10 @@ html, body {
     width: 100%;
 }
 
+input[type=checkbox] {
+    cursor: pointer;
+}
+
 .main-container {
     height: 100%;
     display: flex;
@@ -52,7 +56,7 @@ html, body {
 .content #upload-success .result,
 .content #upload-error .result,
 .content #missing-payslip-list .result {
-    height: 200px;
+    height: 180px;
     overflow: auto;
 }
 

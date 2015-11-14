@@ -25,7 +25,7 @@ class Home(TemplateView):
 
 
 class EmployeeView(TemplateView):
-    template_name = 'employee_table.html'
+    template_name = 'employee/table.html'
 
     def get_context_data(self, **kwargs):
         context = super(EmployeeView, self).get_context_data(**kwargs)
@@ -35,23 +35,26 @@ class EmployeeView(TemplateView):
                                'active': u.active, 'send_email': u.send_email,
                                'cc_email': u.cc_email}
 
-        if(self.request.GET.get('id')):
-            id = int(self.request.GET.get('id'))
-            pslips = Payslip.objects.filter(employee=id)
-            context['payslips'] = []
-            for p in pslips:
-                context['payslips'].append({'name': p.filename.name, 'date': p.date_release})
 
-            context['emp'] = {'name' : p.employee.name, 'email' : p.employee.email, 'active' : p.employee.active}
-            context['table'] = False
-        else:
-            emp = Employee.objects.all()
-
-            context['emp'] = [ make_emp(e) for e in emp ]
+        emp = Employee.objects.all()
+        context['emp'] = [ make_emp(e) for e in emp ]
 
         return context
 
+class EmployeeProfile(TemplateView):
+    template_name = 'employee/profile.html'
 
+    def get_context_data(self, id, **kwargs):
+        context = super(EmployeeProfile, self).get_context_data(**kwargs)
+        emp = Employee.objects.get(id=id)
+        pslips = Payslip.objects.filter(employee=id)
+        context['payslips'] = []
+        if pslips:
+            for p in pslips:
+                context['payslips'].append({'name': p.filename.name, 'date': p.date_release})
+
+        context['emp'] = {'name' : emp.name, 'email' : emp.email, 'active' : emp.active}
+        return context
 
 
 class PayslipSendView(FormView):

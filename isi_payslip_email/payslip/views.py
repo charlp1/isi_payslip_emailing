@@ -15,7 +15,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.views.generic import FormView, TemplateView
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from utils.api import GenericAPIView
 from .forms import SendPayslipForm
@@ -78,6 +78,23 @@ class PayslipSendView(FormView):
 
         return self.response_class(**response_kwargs)
 
+class FolderContent(GenericAPIView):
+    def post(self, request, **kwargs):
+        id = int(request.POST.get('id'))
+        pslips = Payslip.objects.filter(payslip_folder_id=id)
+        data = []
+        if pslips:
+            for p in pslips:
+                user = {
+                    'name': p.employee.name,
+                    'email': p.employee.email,
+                    'filename': p.filename.name,
+                    'active': p.employee.active,
+                    'send_email': p.employee.send_email
+                }
+                data.append(user)
+
+        return JsonResponse(data=data, safe=False)
 
 class PayslipUploadView(TemplateView):
     template_name = 'payslip/upload.html'

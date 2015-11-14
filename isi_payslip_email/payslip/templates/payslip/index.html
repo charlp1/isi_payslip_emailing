@@ -11,14 +11,12 @@
 
     <div class="send-form">
 
-        <form method="post"
-              action="/payslip/send/">
             {% csrf_token %}
             {{ form }}
             <input type="submit"
-                   value="Send Payslip"
+                   value="Go"
+                   id="foldercontent"
                    class="btn btn-success">
-        </form>
 
         <div id="email-app"></div>
 
@@ -29,9 +27,24 @@
 {% block scripts %}
 
     <script type="text/javascript" src='{% static "js/underscore-min-1.7.0.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/amplify.min.js" %}'></script>
     <script type="text/javascript" src='{% static "js/react.min.js" %}'></script>
     <script type="text/javascript" src='{% static "js/JSXTransformer.js" %}'></script>
     <script type="text/javascript" src='{% static "js/reflux.min.js" %}'></script>
+
+    <script>
+        $('#foldercontent').on('click', function(){
+            $.ajax({
+                url: '{% url 'folder_content' %}',
+                type: 'post',
+                data: {
+                    'id': $('#id_payslip_path').val()
+                }
+            }).done(function(data){
+                console.log(data)
+            });
+        });
+    </script>
 
     <script type="text/jsx" src='{% static "email.jsx" %}'></script>
 

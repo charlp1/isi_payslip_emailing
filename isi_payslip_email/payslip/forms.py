@@ -5,11 +5,15 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from datetime import datetime
 
-from .models import Payslip
+from .models import Payslip, PayslipFolder
 
 def get_payslip_choices():
     # you place some logic here
-    return [[d, d] for d in listdir(settings.MEDIA_ROOT) if path.isdir(path.join(settings.MEDIA_ROOT, d))]
+    payslip_folder = PayslipFolder.objects.get(status=False)
+    if payslip_folder:
+        return [[payslip_folder.id, payslip_folder.name]]
+
+    return []
 
 
 class SendPayslipForm(forms.Form):

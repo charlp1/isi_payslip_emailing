@@ -20,8 +20,18 @@
             <!-- The file input field used as target for the file upload widget -->
             <input id="fileupload" type="file" name="files[]" multiple>
         </span>
+
+        <span>
+            <input id="missing-payslip-button"
+                   class="btn btn-primary"
+                   type="button"
+                   value="Get Missing Payslips List" />
+            <span id="missing-payslip-date" class="well well-sm"/>
+        </span>
+
         <br/>
         <br/>
+
         <!-- The global progress bar -->
         <div id="progress" class="progress">
             <div class="progress-bar progress-bar-success"></div>
@@ -49,6 +59,14 @@
             </div>
         </div>
 
+        <!--Missing payslips list-->
+        <div class="col-md-12">
+            <div id="missing-payslip-list" class="panel panel-danger">
+                <div class="status panel-heading">Missing Payslips:</div>
+                <ul class="result list-group"></ul>
+            </div>
+        </div>
+
     </div>
 
 {% endblock content %}
@@ -56,6 +74,7 @@
 {% block scripts %}
 
     <script src='{% static "js/jquery.fileupload.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/underscore-min-1.7.0.js" %}'></script>
 
     <script>
 

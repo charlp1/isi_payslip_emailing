@@ -41,6 +41,14 @@ html, body {
     overflow: auto;
 }
 
+/* Content: upload email */
+.content #upload-success .result,
+.content #upload-error .result,
+.content #missing-payslip-list .result {
+    height: 200px;
+    overflow: auto;
+}
+
 .employee_details {
     font-size: 18px;
 }

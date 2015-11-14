@@ -86,6 +86,7 @@ class FolderContent(GenericAPIView):
         if pslips:
             for p in pslips:
                 user = {
+                    'payslip_id': p.pk,
                     'name': p.employee.name,
                     'email': p.employee.email,
                     'filename': p.filename.name,

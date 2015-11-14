@@ -11,6 +11,8 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.shortcuts import redirect
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.views.generic import FormView, TemplateView
 from django.conf import settings
 from django.http import JsonResponse
@@ -112,12 +114,13 @@ class PayslipUploadView(TemplateView):
                 payslip_folder, created = PayslipFolder.objects.get_or_create(name=pf_name)
 
                 precord = {'employee': employee, 'filename': data, 'payslip_folder': payslip_folder,
-                           'date_release': datetime.now()}
+                           'date_release': datetime.now(), 'status':False}
                 payslip, p_created = Payslip.objects.update_or_create(employee=employee, payslip_folder=payslip_folder,
                                                                       defaults=precord)
                 if p_created:
                     payslip_folder.total_updloaded = Payslip.objects.filter(payslip_folder=payslip_folder).count()
-                    payslip_folder.save()
+                payslip_folder.status = False
+                payslip_folder.save()
                 response.update({'status': 'ok', 'message': 'success'})
 
         return JsonResponse(response)
@@ -146,6 +149,51 @@ class MissingUploadedEmployeeAPIView(GenericAPIView):
                 response.update({'status': 'ok', 'message': 'success', 'data': [e.name for e in employees]})
 
         return JsonResponse(response)
+
+
+class PayslipSendAPIView(GenericAPIView):
+    allowed_methods = ['POST']
+
+    def post(self, request, *args, **kwargs):
+        response = {
+            'status': 'error',
+            'message': 'Request Invalid',
+            'data': {}
+        }
+        data = request.query_params
+        pid = data.get('pid', None)
+        try:
+            payslip = Payslip.objects.get(pk=pid)
+        except Payslip.DoesNotExist:
+            response.update({'message': 'No Payslip Record Found.'})
+        else:
+            body_message = render_to_string('payslip/send_payslip_message.html', {'employee_name': payslip.employee.name,
+                                                                                  'duration': payslip.payslip_folder.name})
+            email = EmailMultiAlternatives(subject='Payslip {}'.format(payslip.payslip_folder.name), body=body_message,
+                                           from_email=settings.COMPANY_EMAIL, to=[payslip.employee.email],
+                                           bcc=[payslip.employee.cc_email])
+            payslip_employee_pdf = join(settings.MEDIA_ROOT, payslip.filename.path)
+            email.attach_file(payslip_employee_pdf, 'application/pdf')
+            email.attach_alternative(body_message, 'text/html')
+            if email.send(fail_silently=False):
+                payslip.date_release = datetime.now()
+                payslip.status = True
+                payslip.save()
+
+                total_sent = Payslip.objects.filter(status=True, payslip_folder=payslip.payslip_folder).count()
+                payslip.payslip_folder.total_sent = total_sent
+                if total_sent >= payslip.payslip_folder.total_uploaded:
+                    payslip.payslip_folder.status = True
+                payslip.payslip_folder.save()
+
+                response.update({'status': 'ok', 'message': 'success',
+                                 'data': {'id': pid, 'date_release': payslip.date_release}})
+            else:
+                response.update({'message': "Unable to send email for employee {} Payslip {}.".format(
+                    payslip.employee.name, payslip.payslip_folder.name)})
+
+        return JsonResponse(response)
+
 
 def get_first_day(dt, d_years=0, d_months=0):
     # d_years, d_months are "deltas" to apply to dt

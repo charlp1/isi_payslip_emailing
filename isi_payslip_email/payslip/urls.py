@@ -3,7 +3,7 @@ from django.conf.urls import include, url, patterns
 
 
 from .views import (Home, EmployeeView, PayslipSendView, PayslipUploadView,
-                    MissingUploadedEmployeeAPIView, EmployeeProfile)
+                    MissingUploadedEmployeeAPIView, EmployeeProfile, PayslipSendAPIView)
 
 urlpatterns = patterns("",
                        url(r'^$', Home.as_view(), name='home'),
@@ -16,4 +16,6 @@ urlpatterns = patterns("",
 urlpatterns += patterns('',
                         url(r"^api/missing_employee/$", MissingUploadedEmployeeAPIView.as_view(),
                             name='missing_employees'),
+                        url(r"^api/send/$", PayslipSendAPIView.as_view(),
+                            name='send_email_payslip'),
                         )

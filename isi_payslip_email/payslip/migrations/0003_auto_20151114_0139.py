@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='payslip',
             name='filename',
-            field=models.FileField(default=b'', upload_to=payslip.models.upload_payslip_holder, verbose_name=b'Payslip Filename'),
+            field=models.FileField(default=b'', upload_to=payslip.models.upload_payslip_holder, storage=payslip.models.OverwritePayslipStorage(), verbose_name=b'Payslip Filename'),
         ),
         migrations.AddField(
             model_name='payslip',

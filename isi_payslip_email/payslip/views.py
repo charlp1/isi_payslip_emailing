@@ -110,9 +110,11 @@ class PayslipUploadView(TemplateView):
 
                 precord = {'employee': employee, 'filename': data, 'payslip_folder': payslip_folder,
                            'date_release': datetime.now()}
-                Payslip(**precord).save()
-                payslip_folder.total_updloaded = Payslip.objects.filter(payslip_folder=payslip_folder).count()
-                payslip_folder.save()
+                payslip, p_created = Payslip.objects.update_or_create(employee=employee, payslip_folder=payslip_folder,
+                                                                      defaults=precord)
+                if p_created:
+                    payslip_folder.total_updloaded = Payslip.objects.filter(payslip_folder=payslip_folder).count()
+                    payslip_folder.save()
                 response.update({'status': 'ok', 'message': 'success'})
 
         return JsonResponse(response)
@@ -128,7 +130,7 @@ class MissingUploadedEmployeeAPIView(GenericAPIView):
             'message': 'Request Invalid.',
             'data': {}
         }
-        data = request.data
+        data = request.query_params
         pf_name = data.get('payslip', None)
         if pf_name:
             try:

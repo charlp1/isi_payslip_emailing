@@ -201,6 +201,33 @@ class PayslipSendAPIView(GenericAPIView):
         return JsonResponse(response)
 
 
+class LogUploadedSendPayslipAPIView(GenericAPIView):
+
+    def post(self, request, **kwargs):
+        pid = request.data.get('pid', None)
+        uploaded_payslip = Payslip.objects.filter(payslip_folder_id=pid)
+        uploaded = []
+        sent = []
+        for p in uploaded_payslip:
+            user = {
+                'payslip_id': p.pk,
+                'name': p.employee.name,
+                'email': p.employee.email,
+                'filename': p.filename.name,
+                'active': p.employee.active,
+                'send_email': p.employee.send_email
+            }
+            if p.status:
+                sent.append(user)
+            uploaded.append(user)
+
+        res = {
+            'payslip_uploaded': uploaded,
+            'payslip_sent': sent
+        }
+        return JsonResponse(data=res, safe=False)
+
+
 def get_first_day(dt, d_years=0, d_months=0):
     # d_years, d_months are "deltas" to apply to dt
     y, m = dt.year + d_years, dt.month + d_months

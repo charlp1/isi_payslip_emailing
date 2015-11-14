@@ -3,7 +3,8 @@ from django.conf.urls import include, url, patterns
 
 
 from .views import (Home, EmployeeView, PayslipSendView, PayslipUploadView,
-                    MissingUploadedEmployeeAPIView, EmployeeProfile, PayslipSendAPIView, FolderContent)
+                    MissingUploadedEmployeeAPIView, EmployeeProfile, PayslipSendAPIView,
+                    FolderContent, LogUploadedSendPayslipAPIView)
 
 urlpatterns = patterns("",
                        url(r'^$', Home.as_view(), name='home'),
@@ -19,4 +20,6 @@ urlpatterns += patterns('',
                             name='missing_employees'),
                         url(r"^api/send/$", PayslipSendAPIView.as_view(),
                             name='send_email_payslip'),
+                        url(r"^api/logs/upload_sent/$", LogUploadedSendPayslipAPIView.as_view(),
+                            name='logs_upload_sent')
                         )

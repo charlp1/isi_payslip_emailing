@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 
-
 import re
 from os.path import join
 from datetime import date, timedelta
@@ -16,12 +15,14 @@ from django.views.generic import FormView, TemplateView
 from django.conf import settings
 from django.http import JsonResponse
 
+from utils.api import GenericAPIView
 from .forms import SendPayslipForm
 from .models import Employee, Payslip, PayslipFolder
 
 
 class Home(TemplateView):
     template_name = 'home.html'
+
 
 class EmployeeView(TemplateView):
     template_name = 'employee_table.html'
@@ -116,6 +117,30 @@ class PayslipUploadView(TemplateView):
 
         return JsonResponse(response)
 
+
+class MissingUploadedEmployeeAPIView(GenericAPIView):
+
+    allowed_methods = ['GET', ]
+
+    def get(self, request, *args, **kwargs):
+        response = {
+            'status': 'error',
+            'message': 'Request Invalid.',
+            'data': {}
+        }
+        data = request.data
+        pf_name = data.get('payslip', None)
+        if pf_name:
+            try:
+                payslip_folder = PayslipFolder.objects.get(name=pf_name)
+            except PayslipFolder.DoesNotExist:
+                response.update({'message': 'No Payslip Found.'})
+            else:
+                employee_ids = Payslip.objects.values_list('employee_id').filter(payslip_folder=payslip_folder)
+                employees = Employee.objects.filter(active=True, send_email=True).exclude(pk__in=employee_ids)
+                response.update({'status': 'ok', 'message': 'success', 'data': [e.name for e in employees]})
+
+        return JsonResponse(response)
 
 def get_first_day(dt, d_years=0, d_months=0):
     # d_years, d_months are "deltas" to apply to dt

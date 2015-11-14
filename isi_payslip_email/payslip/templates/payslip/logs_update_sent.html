@@ -70,5 +70,9 @@
 {% endblock content %}
 
 {% block scripts %}
+    <script>
+    var logs_export_url = '{% url 'logs_upload_sent_export' %}';
+    </script>
     <script type="text/javascript" src="{% static 'events.js' %}"></script>
+
 {% endblock %}

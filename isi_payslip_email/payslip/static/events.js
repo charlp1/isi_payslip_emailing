@@ -84,11 +84,15 @@ function convert_table(object, data){
 }
 
 $('#export').on('click', function(){
+    console.log(logs_export_url);
     var pid = $('#pid').val();
-    url = 'http://127.0.0.1:8000/payslip/logs/upload_sent/export/?pid='+ pid;
-    win = window.open(url, '_blank');
-    if(win){
-        win.focus();
+    if(pid){
+        url = logs_export_url+ '/?pid='+ pid;
+        win = window.open(url, '_blank');
+        if(win){
+            win.focus();
+        }
     }
+
 
 });

@@ -10,6 +10,12 @@ amplify.request.define( "see_logs", "ajax", {
     "type": "POST"
 });
 
+amplify.request.define( "export", "ajax", {
+    "url": "/payslip/logs/upload_sent/export/",
+    "dataType": "json",
+    "type": "GET"
+});
+
  function resend(pid){
      console.log(pid);
      $('#'+ pid).hide();
@@ -67,3 +73,16 @@ function convert_table(object, data){
          bFilter: false
      });
 }
+
+$('#export').on('click', function(){
+    var pid = $('#pid').val();
+    amplify.request({
+        resourceId: 'export',
+        data: {
+            'pid': pid
+        },
+        success: function(){
+
+        }
+    })
+});

@@ -121,12 +121,11 @@ class PayslipUploadView(TemplateView):
             else:
                 payslip_folder, created = PayslipFolder.objects.get_or_create(name=pf_name)
 
-                precord = {'employee': employee, 'filename': data, 'payslip_folder': payslip_folder,
-                           'date_release': datetime.now(), 'status':False}
+                precord = {'employee': employee, 'filename': data, 'payslip_folder': payslip_folder, 'status':False}
                 payslip, p_created = Payslip.objects.update_or_create(employee=employee, payslip_folder=payslip_folder,
                                                                       defaults=precord)
                 if p_created:
-                    payslip_folder.total_updloaded = Payslip.objects.filter(payslip_folder=payslip_folder).count()
+                    payslip_folder.total_uploaded = Payslip.objects.filter(payslip_folder=payslip_folder).count()
                 payslip_folder.status = False
                 payslip_folder.save()
                 response.update({'status': 'ok', 'message': 'success'})
@@ -217,7 +216,7 @@ class LogUploadedSendPayslipAPIView(GenericAPIView):
         return JsonResponse(data=res, safe=False)
 
     def get(self, request, **kwargs):
-        pid = request.data.get('pid', None)
+        pid = request.query_params.get('pid', None)
         res = self.get_response_payslip(pid)
         payslip = PayslipFolder.objects.get(pk=pid)
         header = [

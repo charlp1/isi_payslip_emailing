@@ -85,13 +85,10 @@ function convert_table(object, data){
 
 $('#export').on('click', function(){
     var pid = $('#pid').val();
-    amplify.request({
-        resourceId: 'export',
-        data: {
-            'pid': pid
-        },
-        success: function(){
+    url = 'http://127.0.0.1:8000/payslip/logs/upload_sent/export/?pid='+ pid;
+    win = window.open(url, '_blank');
+    if(win){
+        win.focus();
+    }
 
-        }
-    })
 });

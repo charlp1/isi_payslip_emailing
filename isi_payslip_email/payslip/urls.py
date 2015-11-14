@@ -26,5 +26,7 @@ urlpatterns += patterns('',
 # logs
 urlpatterns += patterns('',
                         url(r"^logs/upload_sent/$", LogUploadedSendPayslipView.as_view(),
-                            name='logs_upload_sent')
+                            name='logs_upload_sent'),
+                        url(r"^logs/upload_sent/export/?$", LogUploadedSendPayslipAPIView.as_view(),
+                            name='logs_upload_sent_export')
                         )

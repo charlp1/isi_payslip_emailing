@@ -18,6 +18,7 @@ from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 
 from utils.api import GenericAPIView
+from utils.export import exportDataAsExcelFile
 from .forms import SendPayslipForm
 from .models import Employee, Payslip, PayslipFolder
 
@@ -212,10 +213,32 @@ class LogUploadedSendPayslipAPIView(GenericAPIView):
 
     def post(self, request, **kwargs):
         pid = request.data.get('pid', None)
-        uploaded_payslip = Payslip.objects.filter(payslip_folder_id=pid)
+        res = self.get_response_payslip(pid)
+        return JsonResponse(data=res, safe=False)
+
+    def get(self, request, **kwargs):
+        pid = request.data.get('pid', 2)
+        res = self.get_response_payslip(pid)
+        payslip = PayslipFolder.objects.get(pk=pid)
+        header = [
+            ('name', 'Employee Name'),
+            ('email', 'Email'),
+            ('filename', 'Filename'),
+            ('active', 'Active'),
+        ]
+        sheets = [
+            {'name': 'Payslip Uploaded', 'header': header, 'data': res['payslip_uploaded']},
+            {'name': 'Payslip Sent', 'header': header, 'data': res['payslip_sent']},
+            {'name': 'Payslip Unsent', 'header': header, 'data': res['payslip_unsent']},
+        ]
+        return exportDataAsExcelFile('{}_logs'.format(payslip.name), sheets)
+
+    def get_response_payslip(self, pid):
+        payslips = Payslip.objects.filter(payslip_folder_id=pid)
         uploaded = []
         sent = []
-        for p in uploaded_payslip:
+        unsent = []
+        for p in payslips:
             user = {
                 'payslip_id': p.pk,
                 'name': p.employee.name,
@@ -226,13 +249,16 @@ class LogUploadedSendPayslipAPIView(GenericAPIView):
             }
             if p.status:
                 sent.append(user)
+            else:
+                unsent.append(user)
             uploaded.append(user)
 
         res = {
             'payslip_uploaded': uploaded,
-            'payslip_sent': sent
+            'payslip_sent': sent,
+            'payslip_unsent': unsent
         }
-        return JsonResponse(data=res, safe=False)
+        return res
 
 
 def get_first_day(dt, d_years=0, d_months=0):

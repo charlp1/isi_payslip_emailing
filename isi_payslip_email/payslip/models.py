@@ -1,5 +1,16 @@
 import os
 from django.db import models
+from django.core.files.storage import FileSystemStorage
+
+
+class OverwritePayslipStorage(FileSystemStorage):
+    def _save(self, name, content):
+        if self.exists(name):
+            self.delete(name)
+        return super(OverwritePayslipStorage, self)._save(name, content)
+
+    def get_available_name(self, name):
+        return name
 
 
 def upload_payslip_holder(model_instance, filename):
@@ -34,7 +45,8 @@ class Payslip(models.Model):
 
     employee = models.ForeignKey(Employee)
     payslip_folder = models.ForeignKey(PayslipFolder)
-    filename = models.FileField('Payslip Filename', default='', upload_to=upload_payslip_holder)
+    filename = models.FileField('Payslip Filename', default='', upload_to=upload_payslip_holder,
+                                storage=OverwritePayslipStorage())
     status = models.BooleanField(default=False)
     date_release = models.DateTimeField('Date Release', default=None)
     created = models.DateTimeField(auto_now=True)

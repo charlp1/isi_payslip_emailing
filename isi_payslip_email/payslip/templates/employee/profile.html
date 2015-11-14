@@ -1,20 +1,37 @@
-Name: {{ emp.name }}<br/>
-Email: {{ emp.email }}<br/>
-Active: {{ emp.active }}<br/><br/>
-Files: <br/>
-<table>
-    <thead>
-        <tr>
-            <th>File</th>
-            <th>Date Released</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for p in payslips %}
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head %}
+
+    <title>List of Employees</title>
+
+    <link rel="stylesheet" href="{% static 'css/jquery.fileupload.css' %}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
+
+{% endblock head %}
+
+{% block content %}
+
+    Name: {{ emp.name }}<br/>
+    Email: {{ emp.email }}<br/>
+    Active: {{ emp.active }}<br/><br/>
+    Files: <br/>
+    <table id="payslip_table" class="table-hover">
+        <thead>
             <tr>
-                <td>{{ p.name }}</td>
-                <td>{{ p.date }}</td>
+                <th>File</th>
+                <th>Date Released</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% for p in payslips %}
+                <tr>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}
+

@@ -12,19 +12,36 @@ var EmployeeInfo = React.createClass({
 
         var index = this.props.index;
         var info = this.props.info;
+        var send_status = info.send_status;
+        var sendStatusIcon = {
+            "ready": (<i className="glyphicon glyphicon-ok"></i>),
+            "sending": (<i className="glyphicon glyphicon-refresh icon-refresh-animate"></i>),
+            "success": (<i className="glyphicon glyphicon-ok"></i>),
+            "error": (<i className="glyphicon glyphicon-remove"></i>),
+            "disable": (<i className="glyphicon glyphicon-ok"></i>),
+        };
+        var rowHighlight = {
+            "ready": "active",
+            "sending": "info",
+            "success": "success",
+            "error": "danger"
+        };
+        var select = send_status === "success" || send_status === "disable" ? "" :
+            ( <input type="checkbox" checked={ info.selected } onChange={ this.handleSelect } /> );
 
         return (
-            <tr key={ index + info.name }>
+            <tr key={ index + info.name }
+                className={ rowHighlight[ send_status ] }>
                 <td>
-                    <input type="checkbox"
-                        checked={ info.selected }
-                        onChange={ this.handleSelect } />
+                    { select }
                 </td>
-                <td>{ info.send_status }</td>
+                <td>
+                    { sendStatusIcon[ send_status ] }
+                </td>
                 <td>{ info.name }</td>
                 <td>{ info.email }</td>
-                <td>{ info.active ? "active" : "inactive" }</td>
-                <td>{ info.send_email ? "yes" : "no" }</td>
+                <td>{ info.active ? "Active" : "Inactive" }</td>
+                <td>{ info.send_email ? "Yes" : "No" }</td>
             </tr>
         );
 
@@ -52,6 +69,7 @@ var EmployeeList = React.createClass({
             );
 
         };
+
         console.log( "checkbox select all:", this.props.selectAll );
         console.log( "checkbox employees:", this.props.items );
 
@@ -85,89 +103,35 @@ var EmailApp = React.createClass( {
 
     "componentWillMount": function() {
 
-        amplify.request.define( "get_employee_list", "ajax", {
-            "url": "/payslip/employee/",
+        amplify.request.define( "send_email", "ajax", {
+            "url": "/payslip/api/send/",
             "dataType": "json",
-            "type": "GET"
-        });
-
-        amplify.request.define( "send-email", "ajax", {
-            "url": "/payslip/employee/",
-            "dataType": "json",
-            "type": "GET"
+            "type": "POST"
         });
 
     },
     "componentDidMount": function() {
 
-        var self = this;
-        var employees = this.getEmployeeList().then(
-            function onSuccess( employeeList ) {
-                self.setEmployeeList( employeeList );
-            },
-            function onError() {
-                alert( "no employees" );
-            }
-        );
-
     },
     "componentWillUnmount": function() {
 
     },
-    "getEmployeeList": function() {
-
-        // Send status: ready, active, success, error
-        var employees = [
-                {
-                    "name": "employee1",
-                    "email": "test1@gmail.com",
-                    "active": true,
-                    "send_email": true,
-                    "send_status": "ready",
-                    "selected": true
-                },
-                {
-                    "name": "employee2",
-                    "email": "test2@gmail.com",
-                    "active": true,
-                    "send_email": true,
-                    "send_status": "ready",
-                    "selected": true
-                },
-                {"name": "employee3", "email": "test2@gmail.com", "active": true, "send_email": true, "send_status": "ready", "selected": true},
-                {"name": "employee4", "email": "test2@gmail.com", "active": true, "send_email": true, "send_status": "ready", "selected": true},
-                {"name": "employee5", "email": "test2@gmail.com", "active": true, "send_email": true, "send_status": "ready", "selected": true},
-                {"name": "employee6", "email": "test2@gmail.com", "active": true, "send_email": true, "send_status": "ready", "selected": true},
-                {"name": "employee7", "email": "test2@gmail.com", "active": true, "send_email": true, "send_status": "ready", "selected": true},
-                {"name": "employee8", "email": "test2@gmail.com", "active": true, "send_email": true, "send_status": "ready", "selected": true},
-                {"name": "employee9", "email": "test2@gmail.com", "active": true, "send_email": true, "send_status": "ready", "selected": true},
-                {"name": "employee10", "email": "test2@gmail.com", "active": true, "send_email": true, "send_status": "ready", "selected": true},
-                {"name": "employee11", "email": "test2@gmail.com", "active": true, "send_email": true, "send_status": "ready", "selected": true},
-                {"name": "employee12", "email": "test2@gmail.com", "active": true, "send_email": true, "send_status": "ready", "selected": true},
-                {"name": "employee13", "email": "test2@gmail.com", "active": true, "send_email": true, "send_status": "ready", "selected": true}
-            ];
-        var defer = $.Deferred();
-
-        // TODO
-        amplify.request({
-            resourceId: "get_employee_list",
-            data: {},
-            success: function( data, status ) {
-
-            },
-            error: function( error, status ) {
-
-            }
-        });
-
-        defer.resolve( employees );
-        return defer.promise();
-
-    },
     "setEmployeeList": function( employees ) {
 
+        console.log( "set employee list:", employees.slice() );
+
+        var newEmployees = _.map( employees, function( employee ) {
+
+            employee.send_status = employee.send_email ? "ready" : "disable";
+            employee.selected = true;
+
+            return employee;
+
+        });
+
         this.setState({
-            "employees": employees
+            "employees": newEmployees,
+            "selectAll": true
         });
 
     },
@@ -183,30 +147,31 @@ var EmailApp = React.createClass( {
 
         var defer = $.Deferred();
 
-        // TODO
-        //amplify.request({
-        //    resourceId: "send_email",
-        //    data: {},
-        //    success: function( data, status ) {
-        //
-        //    },
-        //    error: function( error, status ) {
-        //
-        //    }
-        //});
+        console.log( "send email request:", employee.payslip_id, employee );
 
-        setTimeout( function() {
-            defer.resolve( employee );
-        }, 3000 );
+        amplify.request({
+            resourceId: "send_email",
+            data: {
+                "pid": employee.payslip_id
+            },
+            success: function( data, status ) {
+                defer.resolve( data, status );
+            },
+            error: function( error, status ) {
+                defer.resolve( error, status );
+            }
+        });
 
         return defer.promise();
 
     },
-    "setEmployeeSendStatus": function( name, status ) {
+    "setEmployeeSendStatus": function( data, status ) {
 
-        console.log( "set employee status:", name, status );
+        console.log( "set employee status:", status, data );
+
+        var updatedPayslipId = data.data.id;
         var employees = _.map( this.state.employees, function( employee ) {
-            if ( employee.name === name ) {
+            if ( employee.payslip_id == updatedPayslipId ) {
                 employee.send_status = status;
             }
             return employee;
@@ -221,21 +186,41 @@ var EmailApp = React.createClass( {
 
         e.preventDefault();
 
-        alert( "send email" );
-
         // get list of employees checked
         // send request asynchronously
         var self = this;
         _.each( this.state.employees, function( employee ) {
 
-            self.sendEmailRequest( employee ).then(
-                function onSuccess() {
-                    self.setEmployeeSendStatus( employee.name, "success" );
-                },
-                function onError() {
-                    self.setEmployeeSendStatus( employee.name, "error" );
-                }
-            );
+            var send_status = employee.send_status;
+            var emailNotSent = send_status === "ready" || send_status === "error";
+            var sendEmail = employee.selected && employee.send_email && emailNotSent;
+
+            if ( sendEmail ) {
+
+                self.setEmployeeSendStatus({
+                    "data": { "id": employee.payslip_id },
+                    "status": "sending"
+                }, "sending");
+
+                setTimeout(function () {
+                    self.sendEmailRequest(employee).then(
+                        function onSuccess(data, status) {
+                            self.setEmployeeSendStatus(data, status);
+                        },
+                        function onError(error, status) {
+                            self.setEmployeeSendStatus(error, status);
+                        }
+                    );
+                }, 100);
+
+            } else {
+
+                this.setEmployeeSendStatus({
+                    "data": { "id": employee.payslip_id },
+                    "status": "error"
+                }, "error");
+
+            }
 
         });
 
@@ -279,13 +264,11 @@ var EmailApp = React.createClass( {
             "selectAll": allEmployeesSelected
         });
 
-        console.log( "select employee:", employee );
-
     },
     "render": function() {
 
         return (
-            <div>
+            <div id="email-app-inner-container">
                 <div id="send-email-table">
                     <EmployeeList items={ this.state.employees }
                         selectAll={ this.state.selectAll }
@@ -305,7 +288,7 @@ var EmailApp = React.createClass( {
 
 } );
 
-React.render(
+var emailApp = React.render(
     <EmailApp />,
     document.getElementById( "email-app" )
 );

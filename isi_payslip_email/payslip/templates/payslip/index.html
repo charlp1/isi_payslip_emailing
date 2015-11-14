@@ -11,12 +11,14 @@
 
     <div class="send-form">
 
+        <div id="payslip-select-form">
             {% csrf_token %}
             {{ form }}
             <input type="submit"
-                   value="Go"
+                   value="Update Payslips Table"
                    id="foldercontent"
                    class="btn btn-success">
+        </div>
 
         <div id="email-app"></div>
 
@@ -40,8 +42,8 @@
                 data: {
                     'id': $('#id_payslip_path').val()
                 }
-            }).done(function(data){
-                console.log(data)
+            }).done(function( data ) {
+                emailApp.setEmployeeList( data );
             });
         });
     </script>

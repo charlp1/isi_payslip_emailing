@@ -56,6 +56,7 @@ html, body {
     overflow: auto;
 }
 
+/* Employee */
 .employee_details {
     font-size: 18px;
 }
@@ -68,4 +69,65 @@ html, body {
 
 .logs_tbl{
     display:none;
+}
+
+/* Content: send email */
+.content .send-form,
+.content #email-app-inner-container {
+    height: 100%;
+    position: relative;
+}
+
+.send-form #payslip-select-form {
+    z-index: 2;
+    position: relative;
+}
+
+.send-form #email-app {
+    height: 100%;
+    width: 100%;
+    padding-top: 50px;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+}
+
+#email-app #send-email-table {
+    height: 90%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#email-app #send-email-table table {
+    height: 100%;
+}
+
+#email-app #send-email-table tbody {
+    overflow: auto;
+}
+
+#email-app #send-email-button {
+    height: 10%;
+    width: 100%;
+    padding-top: 10px;
+    position: absolute;
+    top: 90%;
+    left: 0;
+}
+
+/* Icons */
+.icon-refresh-animate {
+    animation-name: rotateThis;
+    animation-duration: .5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes rotateThis {
+    from { transform: scale( 1 ) rotate( 0deg );   }
+    to   { transform: scale( 1 ) rotate( 360deg ); }
 }

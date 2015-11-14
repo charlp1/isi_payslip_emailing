@@ -53,7 +53,8 @@ class EmployeeProfile(TemplateView):
         context['payslips'] = []
         if pslips:
             for p in pslips:
-                context['payslips'].append({'name': p.filename.name, 'date': p.date_release, 'id': p.pk})
+                context['payslips'].append({'name': p.filename.name, 'date': p.date_release, 'id': p.pk,
+                                            'created': p.created })
 
         context['emp'] = {'name' : emp.name, 'email' : emp.email, 'active' : emp.active}
         return context

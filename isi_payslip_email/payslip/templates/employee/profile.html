@@ -22,6 +22,7 @@
         <thead>
             <tr>
                 <th>File</th>
+                <th>Date Created</th>
                 <th>Date Released</th>
                 <th>Action</th>
             </tr>
@@ -30,6 +31,7 @@
             {% for p in payslips %}
                 <tr>
                     <td>{{ p.name }}</td>
+                    <td>{{ p.created }}</td>
                     <td>{{ p.date }}</td>
                     <td>
                         <button class="btn btn-success resend" id="{{ p.id }}" onclick="resend({{ p.id }})">Resend</button>
@@ -51,6 +53,6 @@
             'sPaginationType': 'full_numbers'
         });
     </script>
-    <script type="text/javascript" src="{% static 'resend_email.js' %}"></script>
+    <script type="text/javascript" src="{% static 'events.js' %}"></script>
 {% endblock %}
 

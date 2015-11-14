@@ -65,3 +65,7 @@ html, body {
     height: 30px;
     display: none;
 }
+
+.logs_tbl{
+    display:none;
+}

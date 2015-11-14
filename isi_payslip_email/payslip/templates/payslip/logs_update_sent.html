@@ -4,13 +4,15 @@
 {% block head %}
 
     <title>Payslip - Logs</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
 
 {% endblock head %}
 
 {% block content %}
 
     <div class="send-form">
-            Select Payslip: <select>
+            Select Payslip:
+            <select id="pid">
                 <option value="">Select One</option>
                 {% for p in payslip_folders %}
                     <option value="{{ p.pk }}">{{ p.name }}</option>
@@ -18,7 +20,7 @@
             </select>
             <input type="submit"
                    value="Go"
-                   id="See Reports"
+                   id="see_reports"
                    class="btn btn-success">
     </div>
     <br />
@@ -26,7 +28,12 @@
     <div class="col-md-6">
         <div id="upload-success" class="panel panel-success">
             <div class="status panel-heading">Uploaded</div>
-            <table class="result table"></table>
+            <table id="upload_tbl" class="table-hover logs_tbl">
+                <thead>
+                    <th>Name</th>
+                    <th>Payslip File</th>
+                </thead>
+            </table>
         </div>
     </div>
 
@@ -34,8 +41,29 @@
     <div class="col-md-6">
         <div id="sent-success" class="panel panel-info">
             <div class="status panel-heading">Sent</div>
-            <table class="result table"></table>
+            <table id="sent_tbl" class="table-hover logs_tbl">
+                <thead>
+                    <th>Name</th>
+                    <th>Payslip File</th>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div id="sent-success" class="panel panel-warning">
+            <div class="status panel-heading">Unsent</div>
+            <table id="unsent_tbl" class="table-hover logs_tbl">
+                <thead>
+                    <th>Name</th>
+                    <th>Payslip File</th>
+                </thead>
+            </table>
         </div>
     </div>
 
 {% endblock content %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'events.js' %}"></script>
+{% endblock %}

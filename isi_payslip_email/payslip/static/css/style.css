@@ -41,6 +41,13 @@ html, body {
     overflow: auto;
 }
 
+/* Footer */
+.footer {
+    height: 200px;
+    width: 100%;
+    flex: 0 1 auto;
+}
+
 /* Content: upload email */
 .content #upload-success .result,
 .content #upload-error .result,

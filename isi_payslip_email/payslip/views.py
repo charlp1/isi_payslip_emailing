@@ -166,7 +166,7 @@ class PayslipSendAPIView(GenericAPIView):
             'message': 'Request Invalid',
             'data': {}
         }
-        data = request.query_params
+        data = request.data
         pid = data.get('pid', None)
         try:
             payslip = Payslip.objects.get(pk=pid)

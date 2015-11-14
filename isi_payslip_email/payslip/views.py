@@ -1,12 +1,14 @@
 from __future__ import absolute_import
 
 
+import re
 from os.path import join
 from datetime import date, timedelta
+from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import TemplateView, View
 from django.views.decorators.csrf import csrf_exempt
-
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.shortcuts import redirect
@@ -15,7 +17,7 @@ from django.conf import settings
 from django.http import JsonResponse
 
 from .forms import SendPayslipForm
-from .models import Employee, Payslip
+from .models import Employee, Payslip, PayslipFolder
 
 
 class Home(TemplateView):
@@ -77,19 +79,42 @@ class PayslipUploadView(TemplateView):
     def post(self, request):
         data = request.FILES['files[]']
 
-        date_today = date.today()
-        today = date_today.strftime('%d')
+        filename = data.name
+        split_name = filename.split(settings.PAYSLIP_PATH_SEPARATOR)
 
-        f_day = get_first_day(date_today)
-        f = 16 if int(today) > 15 else f_day.strftime('%d')
+        response = {
+            'status': 'error',
+            'filename': filename,
+            'message': ''
+        }
+        check = True
+        if not filename.endswith('.pdf'):
+            check = False
+            response.update({'message': 'Invalid File Format.'})
 
-        l_day = get_last_day(date_today)
-        l = l_day.strftime('%d') if int(today) > 15 else 15
-        pay_folder = "{0}-{1}-{2}".format(date_today.strftime('%Y-%m'), f, l)
-        path = default_storage.save(join(settings.MEDIA_ROOT, pay_folder, data.name), ContentFile(data.read()))
+        if len(split_name) != 2:
+            check = False
+            response.update({'message': 'Invalid Filename Format.'})
 
+        if check:
+            pf_name = split_name[0].strip()
+            e_name = re.sub('.pdf', '', split_name[1]).strip()
 
-        return JsonResponse({'status': 'ok'})
+            try:
+                employee = Employee.objects.get(name=e_name)
+            except Employee.DoesNotExist:
+                response.update({'message': 'No Employee Found.'})
+            else:
+                payslip_folder, created = PayslipFolder.objects.get_or_create(name=pf_name)
+
+                precord = {'employee': employee, 'filename': data, 'payslip_folder': payslip_folder,
+                           'date_release': datetime.now()}
+                Payslip(**precord).save()
+                payslip_folder.total_updloaded = Payslip.objects.filter(payslip_folder=payslip_folder).count()
+                payslip_folder.save()
+                response.update({'status': 'ok', 'message': 'success'})
+
+        return JsonResponse(response)
 
 
 def get_first_day(dt, d_years=0, d_months=0):

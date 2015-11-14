@@ -217,7 +217,7 @@ class LogUploadedSendPayslipAPIView(GenericAPIView):
         return JsonResponse(data=res, safe=False)
 
     def get(self, request, **kwargs):
-        pid = request.data.get('pid', 2)
+        pid = request.data.get('pid', None)
         res = self.get_response_payslip(pid)
         payslip = PayslipFolder.objects.get(pk=pid)
         header = [

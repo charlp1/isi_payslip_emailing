@@ -122,7 +122,8 @@ class PayslipUploadView(TemplateView):
             else:
                 payslip_folder, created = PayslipFolder.objects.get_or_create(name=pf_name)
 
-                precord = {'employee': employee, 'filename': data, 'payslip_folder': payslip_folder, 'status':False}
+                precord = {'employee': employee, 'filename': data, 'payslip_folder': payslip_folder,
+                           'status': False, 'date_release': datetime.now()}
                 payslip, p_created = Payslip.objects.update_or_create(employee=employee, payslip_folder=payslip_folder,
                                                                       defaults=precord)
                 if p_created:

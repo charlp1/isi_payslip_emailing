@@ -129,6 +129,10 @@ var EmailApp = React.createClass( {displayName: "EmailApp",
 
         });
 
+        newEmployees = _.filter( newEmployees, function( employee ) {
+            return !employee.status;
+        });
+
         this.setState({
             "employees": newEmployees,
             "selectAll": true

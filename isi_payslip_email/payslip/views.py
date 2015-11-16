@@ -179,9 +179,14 @@ class PayslipSendAPIView(GenericAPIView):
         except Payslip.DoesNotExist:
             response.update({'message': 'No Payslip Record Found.'})
         else:
+            ps_name = payslip.payslip_folder.name.split('-')
+            d = date(int(ps_name[0]), int(ps_name[1]), int(ps_name[2]))
+            month_str = d.strftime('%B')
+            payslip_folder_str = '{0} {1}-{2}, {3}'.format(month_str, ps_name[2], ps_name[3], ps_name[0])
             body_message = render_to_string('payslip/send_payslip_message.html', {'employee_name': payslip.employee.name,
-                                                                                  'duration': payslip.payslip_folder.name})
-            email = EmailMultiAlternatives(subject='Payslip {}'.format(payslip.payslip_folder.name), body=body_message,
+                                                                                  'duration': payslip_folder_str})
+
+            email = EmailMultiAlternatives(subject='Payslip {}'.format(payslip_folder_str), body=body_message,
                                            from_email=settings.COMPANY_EMAIL, to=[payslip.employee.email],
                                            bcc=[payslip.employee.cc_email])
             payslip_employee_pdf = join(settings.MEDIA_ROOT, payslip.filename.path)

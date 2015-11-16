@@ -81,7 +81,8 @@ class FolderContent(GenericAPIView):
                     'email': p.employee.email,
                     'filename': p.filename.name,
                     'active': p.employee.active,
-                    'send_email': p.employee.send_email
+                    'send_email': p.employee.send_email,
+                    'status': p.status
                 }
                 data.append(user)
 

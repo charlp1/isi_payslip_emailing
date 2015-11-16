@@ -7,11 +7,146 @@
 
     <link rel="stylesheet" href="{% static 'css/jquery.dataTables.css' %}">
     <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+    <style>
+
+    .panel-green {
+        border-color: #5cb85c;
+    }
+    .panel-green .panel-heading {
+        border-color: #5cb85c;
+        color: #fff;
+        background-color: #5cb85c;
+    }
+    .huge {
+        font-size: 40px;
+    }
+    .panel-green a {
+        color: #5cb85c;
+    }
+    .panel-yellow {
+        border-color: #f0ad4e;
+    }
+    .panel-yellow .panel-heading {
+        border-color: #f0ad4e;
+        color: #fff;
+        background-color: #f0ad4e;
+    }
+    .panel-yellow a {
+        color: #f0ad4e;
+    }
+    .panel-red {
+        border-color: #d9534f;
+    }
+    .panel-red .panel-heading {
+        border-color: #d9534f;
+        color: #fff;
+        background-color: #d9534f;
+    }
+    .panel-red a {
+        color: #d9534f;
+    }
+    </style>
 
 {% endblock head %}
 
 {% block content %}
-    <h1>HOME CONTENT</h1>
+    		<div class="row">
+				<div class="col-lg-12">
+					<h1 class="page-header">Dashboard</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-3 col-md-6">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+                                    <i class="fa fa-envelope-o fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div class="lbl-icon">Send Email</div>
+								</div>
+							</div>
+						</div>
+						<!-- end panel -heading -->
+						<a href="/payslip/send">
+							<div class="panel-footer">
+								<span class="pull-left">View Details</span>
+								<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+								<div class="clearfix"></div>
+							</div>
+						</a>
+						<!-- end panel-footer -->
+					</div>
+				</div>  <!--end col-lg-3 -->
+				<!-- end panel -->
+				<div class="col-lg-3 col-md-6">
+					<div class="panel panel-green">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-file-o fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div class="lbl-icon">Upload</div>
+								</div>
+							</div>
+						</div>
+						<!-- end panel heading -->
+						<a href="/payslip/upload">
+							<div class="panel-footer">
+								<span class="pull-left">View Details</span>
+								<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+								<div class="clearfix"></div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<!-- end panel -->
+				<div class="col-lg-3  col-md-6">
+					<div class="panel panel-yellow">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-users fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div class="lbl-icon">Employees</div>
+								</div>
+							</div>
+						</div>
+						<a href="/payslip/employee">
+							<div class="panel-footer">
+								<span class="pull-left">View Details</span>
+								<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+								<div class="clearfix"></div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<!-- end panel -->
+				<div class="col-lg-3 col-md-6">
+					<div class="panel panel-red">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-files-o fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+                                    <div class="lbl-icon">Logs</div>
+                                </div>
+							</div>
+						</div>
+						<a href="/payslip/logs/upload_sent/">
+							<div class="panel-footer">
+								<span class="pull-left">View Details</span>
+								<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+								<div class="clearfix"></div>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div> <!-- end row-->
 {% endblock content %}
 
 {% block scripts %}

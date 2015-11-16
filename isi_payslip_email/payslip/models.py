@@ -49,7 +49,7 @@ class Payslip(models.Model):
                                 storage=OverwritePayslipStorage())
     status = models.BooleanField(default=False)
     date_release = models.DateTimeField('Date Release', default=None)
-    created = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.employee.name

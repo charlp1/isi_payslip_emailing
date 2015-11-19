@@ -127,14 +127,23 @@ class PayslipUploadView(TemplateView):
                 payslip_folder, created = PayslipFolder.objects.get_or_create(name=pf_name)
 
                 precord = {'employee': employee, 'filename': data, 'payslip_folder': payslip_folder,
-                           'date_release': datetime.now(), 'status':False}
+                           'date_release': datetime.now(), 'status': False}
                 payslip, p_created = Payslip.objects.update_or_create(employee=employee, payslip_folder=payslip_folder,
                                                                       defaults=precord)
                 if p_created:
                     payslip_folder.total_uploaded = Payslip.objects.filter(payslip_folder=payslip_folder).count()
                 payslip_folder.status = False
                 payslip_folder.save()
-                response.update({'status': 'ok', 'message': 'success'})
+                data = {
+                    'payslip_id': payslip.pk,
+                    'name': payslip.employee.name,
+                    'filename': payslip.filename.name,
+                    'file_url': payslip.filename.url,
+                    'active': payslip.employee.active,
+                    'send_email': payslip.employee.send_email,
+                    'status': payslip.status
+                }
+                response.update({'status': 'ok', 'message': 'success', 'data': data})
 
         return JsonResponse(response)
 

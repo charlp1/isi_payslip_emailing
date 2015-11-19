@@ -83,6 +83,7 @@ class FolderContent(GenericAPIView):
                     'name': p.employee.name,
                     'email': p.employee.email,
                     'filename': p.filename.name,
+                    'file_url': p.filename.url,
                     'active': p.employee.active,
                     'send_email': p.employee.send_email,
                     'status': p.status

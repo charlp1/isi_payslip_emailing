@@ -25,6 +25,7 @@ $(function () {
     var missingPayslipDate = $( "#missing-payslip-date" );
     var missingPayslipListContainer = $( "#missing-payslip-list" );
     var missingPayslipList = $( ".result", "#missing-payslip-list" );
+    var missingPayslipStatus = $( ".status", "#missing-payslip-list" );
 
     /**
      * Request missing payslips
@@ -71,10 +72,12 @@ $(function () {
                 });
                 missingPayslipListContainer.show();
                 missingPayslipList.html( payslipList.join("") );
+                missingPayslipStatus.html( "Missing Payslip: " + payslipList.length );
             },
             function onError( error, status ) {
                 missingPayslipListContainer.show();
                 missingPayslipList.html( error && error.toString() );
+                missingPayslipStatus.html( "Missing Payslip:" );
             }
         );
 
@@ -134,6 +137,7 @@ $(function () {
         });
 
         // Update upload status
+        uploadStatusData.total = data.originalFiles.length;
         if ( uploadSuccess ) {
             uploadStatusData.success++;
             data.context.appendTo( "#upload-success .result" );
@@ -142,8 +146,8 @@ $(function () {
             data.context.appendTo( "#upload-error .result" );
         }
 
-        uploadSuccessStatus.html( "Uploaded: " + uploadStatusData.success );
-        uploadErrorStatus.html( "Failed: " + uploadStatusData.error );
+        uploadSuccessStatus.html( "Uploaded: " + uploadStatusData.success + " / " + uploadStatusData.total );
+        uploadErrorStatus.html( "Failed: " + uploadStatusData.error + " / " + uploadStatusData.total );
 
         // Update missing payslip button, date, and list
         failedToUploadDate = result.filename.split( " " )[ 0 ];

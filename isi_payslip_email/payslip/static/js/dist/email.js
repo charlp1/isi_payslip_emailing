@@ -14,11 +14,11 @@ var EmployeeInfo = React.createClass({displayName: "EmployeeInfo",
         var info = this.props.info;
         var send_status = info.send_status;
         var sendStatusIcon = {
-            "ready": (React.createElement("i", {className: "glyphicon glyphicon-ok"})),
+            "ready": "",
             "sending": (React.createElement("i", {className: "glyphicon glyphicon-refresh icon-refresh-animate"})),
             "success": (React.createElement("i", {className: "glyphicon glyphicon-ok"})),
             "error": (React.createElement("i", {className: "glyphicon glyphicon-remove"})),
-            "disable": (React.createElement("i", {className: "glyphicon glyphicon-ok"}))
+            "disable": ""
         };
         var rowHighlight = {
             "ready": "active",
@@ -28,6 +28,7 @@ var EmployeeInfo = React.createClass({displayName: "EmployeeInfo",
         };
         var select = send_status === "success" || send_status === "disable" ? "" :
             ( React.createElement("input", {type: "checkbox", checked:  info.selected, onChange:  this.handleSelect}) );
+        var link = info.file_url ? (React.createElement("a", {href:  info.file_url, target: "_blank"}, "PDF")) : "";
 
         return (
             React.createElement("tr", {key:  index + info.name, 
@@ -35,13 +36,14 @@ var EmployeeInfo = React.createClass({displayName: "EmployeeInfo",
                 React.createElement("td", null, 
                     select 
                 ), 
-                React.createElement("td", null, 
-                     sendStatusIcon[ send_status] 
-                ), 
                 React.createElement("td", null,  info.name), 
                 React.createElement("td", null,  info.email), 
-                React.createElement("td", null,  info.active ? "Active" : "Inactive"), 
-                React.createElement("td", null,  info.send_email ? "Yes" : "No")
+                React.createElement("td", null, 
+                    link 
+                ), 
+                React.createElement("td", null, 
+                     sendStatusIcon[ send_status] 
+                )
             )
         );
 
@@ -82,11 +84,10 @@ var EmployeeList = React.createClass({displayName: "EmployeeList",
                                 checked:  this.props.selectAll, 
                                 onChange:  this.handleSelectAll})
                         ), 
-                        React.createElement("th", null, "Send Status"), 
                         React.createElement("th", null, "Name"), 
                         React.createElement("th", null, "Email"), 
-                        React.createElement("th", null, "Status"), 
-                        React.createElement("th", null, "Send Email")
+                        React.createElement("th", null, "Link"), 
+                        React.createElement("th", null, "Send Status")
                     )
                 ), 
                 React.createElement("tbody", null, 

@@ -14,11 +14,11 @@ var EmployeeInfo = React.createClass({
         var info = this.props.info;
         var send_status = info.send_status;
         var sendStatusIcon = {
-            "ready": (<i className="glyphicon glyphicon-ok"></i>),
+            "ready": "",
             "sending": (<i className="glyphicon glyphicon-refresh icon-refresh-animate"></i>),
             "success": (<i className="glyphicon glyphicon-ok"></i>),
             "error": (<i className="glyphicon glyphicon-remove"></i>),
-            "disable": (<i className="glyphicon glyphicon-ok"></i>)
+            "disable": ""
         };
         var rowHighlight = {
             "ready": "active",
@@ -28,6 +28,7 @@ var EmployeeInfo = React.createClass({
         };
         var select = send_status === "success" || send_status === "disable" ? "" :
             ( <input type="checkbox" checked={ info.selected } onChange={ this.handleSelect } /> );
+        var link = info.file_url ? (<a href={ info.file_url } target="_blank">PDF</a>) : "";
 
         return (
             <tr key={ index + info.name }
@@ -35,13 +36,14 @@ var EmployeeInfo = React.createClass({
                 <td>
                     { select }
                 </td>
+                <td>{ info.name }</td>
+                <td>{ info.email }</td>
+                <td>
+                    { link }
+                </td>
                 <td>
                     { sendStatusIcon[ send_status ] }
                 </td>
-                <td>{ info.name }</td>
-                <td>{ info.email }</td>
-                <td>{ info.active ? "Active" : "Inactive" }</td>
-                <td>{ info.send_email ? "Yes" : "No" }</td>
             </tr>
         );
 
@@ -82,11 +84,10 @@ var EmployeeList = React.createClass({
                                 checked={ this.props.selectAll }
                                 onChange={ this.handleSelectAll } />
                         </th>
-                        <th>Send Status</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Status</th>
-                        <th>Send Email</th>
+                        <th>Link</th>
+                        <th>Send Status</th>
                     </tr>
                 </thead>
                 <tbody>

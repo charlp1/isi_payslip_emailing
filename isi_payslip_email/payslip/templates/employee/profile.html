@@ -30,7 +30,7 @@
         <tbody>
             {% for p in payslips %}
                 <tr>
-                    <td>{{ p.name }}</td>
+                    <td><a href="{{ p.file_url }}" target="_blank" title="Preview"> {{ p.name }}</a></td>
                     <td>{{ p.created }}</td>
                     <td>{{ p.date }}</td>
                     <td>

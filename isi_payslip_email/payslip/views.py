@@ -58,7 +58,7 @@ class EmployeeProfile(TemplateView):
                 if not p.status:
                     release = ''
                 context['payslips'].append({'name': p.filename.name, 'date': release, 'id': p.pk,
-                                            'created': p.created })
+                                            'created': p.created, 'file_url': p.filename.url })
 
         context['emp'] = {'name' : emp.name, 'email' : emp.email, 'active' : emp.active}
         return context

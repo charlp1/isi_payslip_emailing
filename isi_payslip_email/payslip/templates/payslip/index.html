@@ -35,16 +35,25 @@
     <script type="text/javascript" src='{% static "js/reflux.min.js" %}'></script>
 
     <script>
-        $('#foldercontent').on('click', function(){
-            $.ajax({
-                url: '{% url 'folder_content' %}',
-                type: 'post',
-                data: {
-                    'id': $('#id_payslip_path').val()
-                }
-            }).done(function( data ) {
-                emailApp.setEmployeeList( data );
-            });
+        $(document).ready(function () {
+            var id_payslip_path = $('#id_payslip_path').val();
+            var get_paylips_list = function (){
+                $.ajax({
+                    url: '{% url 'folder_content' %}',
+                    type: 'post',
+                    data: {
+                        'id': $('#id_payslip_path').val()
+                    }
+                }).done(function( data ) {
+                    emailApp.setEmployeeList( data );
+                });
+            };
+
+            if (id_payslip_path) {
+                get_paylips_list();
+            }
+
+            $('#foldercontent').on('click', get_paylips_list);
         });
     </script>
 

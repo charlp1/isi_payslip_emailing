@@ -72,9 +72,6 @@ var EmployeeList = React.createClass({
 
         };
 
-        console.log( "checkbox select all:", this.props.selectAll );
-        console.log( "checkbox employees:", this.props.items );
-
         return (
             <table className="table table-striped table-hover table-bordered">
                 <thead>
@@ -172,8 +169,6 @@ var EmailApp = React.createClass( {
     },
     "setEmployeeSendStatus": function( data, status ) {
 
-        console.log( "set employee status:", status, data );
-
         var updatedPayslipId = data.data.id;
         var employees = _.map( this.state.employees, function( employee ) {
             if ( employee.payslip_id == updatedPayslipId ) {
@@ -187,47 +182,69 @@ var EmailApp = React.createClass( {
         });
 
     },
-    "sendEmail": function() {
+    "sendEmailToEmployee": function( employees ) {
+
+        var employeeList = employees.slice();
+        var employee = employeeList.shift();
+        var deferred = $.Deferred();
+        var self = this;
+        var send_status = employee.send_status;
+        var emailNotSent = send_status === "ready" || send_status === "error";
+        var sendEmail = employee.selected && employee.send_email && emailNotSent;
+
+        if ( sendEmail ) {
+
+            self.setEmployeeSendStatus({
+                "data": { "id": employee.payslip_id },
+                "status": "sending"
+            }, "sending");
+
+            setTimeout(function () {
+                self.sendEmailRequest(employee).then(
+                    function onSuccess(data, status) {
+                        self.setEmployeeSendStatus(data, status);
+                        deferred.resolve( employeeList );
+                    },
+                    function onError(error, status) {
+                        self.setEmployeeSendStatus(error, status);
+                        deferred.resolve( employeeList );
+                    }
+                );
+            }, 100);
+
+        } else {
+
+            this.setEmployeeSendStatus({
+                "data": { "id": employee.payslip_id },
+                "status": "error"
+            }, "error");
+
+        }
+
+        return deferred.promise();
+    },
+    "sendEmail": function( employees ) {
+
+        var employeeList = _.isEmpty( employees ) ? this.state.employees : employees;
 
         // get list of employees checked
         // send request asynchronously
         var self = this;
+        var sendEmailDone = this.sendEmailToEmployee( employeeList );
 
-        _.each( this.state.employees, function( employee ) {
-
-            var send_status = employee.send_status;
-            var emailNotSent = send_status === "ready" || send_status === "error";
-            var sendEmail = employee.selected && employee.send_email && emailNotSent;
-
-            if ( sendEmail ) {
-
-                self.setEmployeeSendStatus({
-                    "data": { "id": employee.payslip_id },
-                    "status": "sending"
-                }, "sending");
-
-                setTimeout(function () {
-                    self.sendEmailRequest(employee).then(
-                        function onSuccess(data, status) {
-                            self.setEmployeeSendStatus(data, status);
-                        },
-                        function onError(error, status) {
-                            self.setEmployeeSendStatus(error, status);
-                        }
-                    );
-                }, 100);
-
-            } else {
-
-                this.setEmployeeSendStatus({
-                    "data": { "id": employee.payslip_id },
-                    "status": "error"
-                }, "error");
-
-            }
-
+        sendEmailDone.then( function onSuccess( newEmployeeList ) {
+            setTimeout( function() {
+                if ( !_.isEmpty(newEmployeeList)) {
+                    self.sendEmail(newEmployeeList);
+                }
+            }, 1000 );
+        }, function onError( newEmployeeList ) {
+            setTimeout( function() {
+                if ( !_.isEmpty(newEmployeeList)) {
+                    self.sendEmail(newEmployeeList);
+                }
+            }, 1000 );
         });
-
     },
     "onClickSendEmail": function( e ) {
 
@@ -235,7 +252,12 @@ var EmailApp = React.createClass( {
 
         if ( !_.isEmpty( this.state.employees ) ) {
 
-            this.sendEmail();
+            var employees = _.filter( this.state.employees, function( employee ) {
+                return employee.selected && employee.send_email &&
+                    (employee.send_status === "ready" || employee.send_status === "error");
+            });
+
+            this.sendEmail( employees );
 
         }
 

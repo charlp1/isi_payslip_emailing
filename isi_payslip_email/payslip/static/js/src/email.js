@@ -36,6 +36,7 @@ var EmployeeInfo = React.createClass({
                 <td>
                     { select }
                 </td>
+                <td>{ index }</td>
                 <td>{ info.name }</td>
                 <td>{ info.email }</td>
                 <td>
@@ -81,6 +82,7 @@ var EmployeeList = React.createClass({
                                 checked={ this.props.selectAll }
                                 onChange={ this.handleSelectAll } />
                         </th>
+                        <th></th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Link</th>

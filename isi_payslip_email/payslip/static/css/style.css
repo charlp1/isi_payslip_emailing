@@ -130,6 +130,25 @@ input[type=checkbox] {
     margin-left: 15px;
 }
 
+/* Login Page */
+.login-page, .login-form-container {
+    height: 100%;
+}
+
+.login-page {
+    background: #eee;
+}
+
+.login-form-container {
+    display: flex;
+}
+
+.login-form {
+    max-width: 300px;
+    padding: 15px;
+    margin: auto;
+}
+
 /* */
 
 #page-wrapper {

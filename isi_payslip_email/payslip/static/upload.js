@@ -196,7 +196,7 @@ $(function () {
             initMissingPayslipsResult();
 
         },
-        done: function ( e, data ) {
+        always: function ( e, data ) {
 
             onUploadComplete( data );
 

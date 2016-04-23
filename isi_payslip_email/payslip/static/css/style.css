@@ -85,6 +85,7 @@ input[type=checkbox] {
 .send-form #payslip-select-form {
     z-index: 2;
     position: relative;
+    margin-top: 5px;
 }
 
 .send-form #email-app {

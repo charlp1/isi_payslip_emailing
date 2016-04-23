@@ -14,12 +14,9 @@
         <div id="payslip-select-form">
             {% csrf_token %}
             <input id="id_payslip_path"
+                   class="form-control"
                    type="text"
-                    placeholder="Type here: 2016">
-            <input type="submit"
-                   value="Update Payslips Table"
-                   id="foldercontent"
-                   class="btn btn-success">
+                   placeholder="Type here: 2016">
         </div>
 
         <div id="email-app"></div>
@@ -48,6 +45,11 @@
                             $( this ).autocomplete( "instance" ).menu.active ) {
                             event.preventDefault();
                         }
+                        // Enter key = update payslips table
+                        if ( event.keyCode === 13 ) {
+                            get_paylips_list();
+                            event.preventDefault();
+                        }
                     })
                     .autocomplete({
                         source: function( request, response ) {
@@ -70,14 +72,15 @@
                         },
                         select: function( event, ui ) {
                             this.value = ui.item.value || "";
+                            get_paylips_list( this.value );
                             return false;
                         }
                     }
                 );
             };
 
-            var get_paylips_list = function (){
-                var id = id_payslip_path.val();
+            var get_paylips_list = function ( payslipId ){
+                var id = payslipId ? payslipId : id_payslip_path.val();
                 id = id.match(/\[(\d+)\]/);
                 id = id && id[ 1 ] ? parseInt( id[ 1 ] ) : null;
 
@@ -93,8 +96,6 @@
                     });
                 }
             };
-
-            $('#foldercontent').on('click', get_paylips_list);
 
             // Initialize autocomplete
             initAutoComplete();

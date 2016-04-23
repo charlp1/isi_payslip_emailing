@@ -40,7 +40,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    
+    'constance',
+    'constance.backends.database',
     'payslip',
     'webapp'
 )
@@ -69,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'constance.context_processors.config',
             ],
         },
     },
@@ -84,8 +86,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "isi_payslip_email",
-        "USER": "panasco",                      # Not used with sqlite3.
-        "PASSWORD": "panasco",
+        "USER": "root",                      # Not used with sqlite3.
+        "PASSWORD": "",
         "HOST": "localhost",
         "TEST_CHARSET" : "utf8",
         "TEST_COLLATION": "utf8_general_ci"
@@ -154,3 +156,27 @@ LOGGING = {
         }
     }
 }
+
+# django-constance
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_IGNORE_ADMIN_VERSION_CHECK = True
+CONSTANCE_CONFIG = {
+    'COMPANY': ('Innovuze Solutions, Inc.', ''),
+    'COMPANY_ADDRESS': ("""8th Level, Gateway Tower,
+                           Limketkai Center, Lapasan,
+                           Cagayan de Oro City""", ''),
+    'COMPANY_SITE': ('http://www.innovuze.com',''),
+    'COMPANY_PHONE': ('(088) 324-0454', 'Company contact.'),
+    'COMPANY_EMAIL': ('innovouze@gmail.com', 'Company Email'),
+    'PAYSLIP_PATH_SEPARATOR': (PAYSLIP_PATH_SEPARATOR, 'Payslip Path Separator'),
+    'EMAIL_TEMPLATE_DISCLAIMER': ("""This a system generated email that may contain confidential information for the sole use of the intended recipient/s.
+        If you are not the intended recipient, please contact the sender, delete this email and maintain the confidentiality of what you may have read.
+        """, 'Email disclaimer message.'),
+    'EMAIL_COMPANY_LOGO': ('http://oi58.tinypic.com/az8468.jpg', 'Company logo url.'),
+    'EMAIL_GREETINGS': ('Greetings, {employee_name}!', 'You can use the {{ employee_name}} and {{payslip_name}} tags here.'),
+    'EMAIL_BODY_MESSAGES': ("""Attached is your pay slip for the following duration: {payslip_name}
+                            \nThank you and have a good day.""", 'You can use {{ employee_name}} and {{payslip_name}} tags.')
+
+}
+CONSTANCE_SUPERUSER_ONLY = True
+CONSTANCE_DATABASE_PREFIX = 'constance:payslip_email:'

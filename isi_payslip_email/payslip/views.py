@@ -1,22 +1,16 @@
 from __future__ import absolute_import
 
 import re
-import json
 from os.path import join
 from datetime import date, timedelta
 from datetime import datetime
-from django.core.exceptions import ObjectDoesNotExist
-from django.views.generic import TemplateView, View
-from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
-from django.shortcuts import redirect
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.views.generic import FormView, TemplateView, ListView
 from django.conf import settings
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
+
+from constance import config
 
 from utils.api import GenericAPIView
 from utils.export import exportDataAsExcelFile
@@ -100,7 +94,7 @@ class PayslipUploadView(TemplateView):
         data = request.FILES['files[]']
 
         filename = data.name
-        split_name = filename.split(settings.PAYSLIP_PATH_SEPARATOR)
+        split_name = filename.split(config.PAYSLIP_PATH_SEPARATOR)
 
         response = {
             'status': 'error',
@@ -224,12 +218,21 @@ class PayslipSendAPIView(GenericAPIView):
                 month_str = d.strftime('%B')
                 payslip_name = '{0} {1}-{2}, {3}'.format(month_str, ps_name[2], ps_name[3], ps_name[0])
 
-            body_message = render_to_string('payslip/send_payslip_message.html', {'employee_name': payslip.employee.name,
-                                                                                  'payslip_name': payslip_name})
+            greetings = config.EMAIL_GREETINGS.format(employee_name=payslip.employee.name, payslip_name=payslip_name)
+            c_message = config.EMAIL_BODY_MESSAGES.format(employee_name=payslip.employee.name, payslip_name=payslip_name)
+            body_message = render_to_string('payslip/send_payslip_message.html', {'logo_url': config.EMAIL_COMPANY_LOGO,
+                                                                                  'disclaimer': config.EMAIL_TEMPLATE_DISCLAIMER,
+                                                                                  'company_name': config.COMPANY,
+                                                                                  'company_address': config.COMPANY_ADDRESS,
+                                                                                  'company_site': config.COMPANY_SITE,
+                                                                                  'company_phone': config.COMPANY_PHONE,
+                                                                                  'greetings': greetings,
+                                                                                  'body_message': c_message})
 
             email = EmailMultiAlternatives(subject='Payslip {}'.format(payslip_name), body=body_message,
-                                           from_email=settings.COMPANY_EMAIL, to=[payslip.employee.email],
+                                           from_email=config.COMPANY_EMAIL, to=[payslip.employee.email],
                                            bcc=[payslip.employee.cc_email])
+            email.content_subtype = 'html'
             payslip_employee_pdf = join(settings.MEDIA_ROOT, payslip.filename.path)
             email.attach_file(payslip_employee_pdf, 'application/pdf')
             email.attach_alternative(body_message, 'text/html')

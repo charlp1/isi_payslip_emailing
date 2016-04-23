@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import re
+import json
 from os.path import join
 from datetime import date, timedelta
 from datetime import datetime
@@ -171,6 +172,31 @@ class MissingUploadedEmployeeAPIView(GenericAPIView):
                 employees = Employee.objects.filter(active=True, send_email=True).exclude(pk__in=employee_ids)
                 response.update({'status': 'ok', 'message': 'success', 'data': [e.name for e in employees]})
 
+        return JsonResponse(response)
+
+
+class SearchPayslipAPIView(GenericAPIView):
+    allowed_methods = ['GET', ]
+
+    def get(self, request, *args, **kwargs):
+        response = {
+            'status': 'error',
+            'message': 'Request Invalid.',
+            'data': {}
+        }
+        data = request.query_params
+        pf_name = data.get('payslip', None)
+        if pf_name:
+            payslips = PayslipFolder.objects.values_list('pk', 'name').filter(name__icontains=pf_name)
+            # http://127.0.0.1:8000/payslip/api/search/?payslip=2015 sample
+            # response format
+            # {
+            #   status: "ok",
+            #   message: "success",
+            #   data: [ [1,"2015-05-01-15"], [2,"2015-06-01-15"]],....
+            # }
+            # data = [[id, name], ...]
+            response.update({'status': 'ok', 'message': 'success', 'data': list(payslips)})
         return JsonResponse(response)
 
 

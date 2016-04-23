@@ -31,7 +31,7 @@ class Employee(models.Model):
 
 
 class PayslipFolder(models.Model):
-    name = models.CharField(max_length=1064, null=False)
+    name = models.CharField(max_length=255, null=False, unique=True)
     created = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=False)
     total_uploaded = models.IntegerField(default=0)

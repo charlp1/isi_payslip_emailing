@@ -17,6 +17,7 @@
                    class="form-control"
                    type="text"
                    placeholder="Type here: 2016">
+            <div class="glyphicon glyphicon-refresh icon-refresh-animate"></div>
         </div>
 
         <div id="email-app"></div>
@@ -36,6 +37,15 @@
     <script>
         $(document).ready(function () {
             var id_payslip_path = $('#id_payslip_path');
+            var inputLoadingIcon = $('.icon-refresh-animate', '#payslip-select-form');
+
+            var showInputLoadingIcon = function(show) {
+                if (show) {
+                    inputLoadingIcon.show();
+                } else {
+                    inputLoadingIcon.hide();
+                }
+            };
 
             var initAutoComplete = function (){
                 id_payslip_path.bind( "keydown",
@@ -53,6 +63,7 @@
                     })
                     .autocomplete({
                         source: function( request, response ) {
+                            showInputLoadingIcon( true );
                             $.ajax({
                                 url: 'api/search/',
                                 type: 'get',
@@ -60,6 +71,7 @@
                                     'payslip': request.term
                                 }
                             }).done(function( result ) {
+                                showInputLoadingIcon( false );
                                 var formattedData = _.map( result.data, function( data ) {
                                     return data[ 1 ] + " [" + data[ 0 ] + "]";
                                 });
@@ -85,6 +97,8 @@
                 id = id && id[ 1 ] ? parseInt( id[ 1 ] ) : null;
 
                 if ( id !== null ) {
+                    showInputLoadingIcon( true );
+
                     $.ajax({
                         url: '{% url 'folder_content' %}',
                         type: 'post',
@@ -92,6 +106,7 @@
                             'id': id
                         }
                     }).done(function( data ) {
+                        showInputLoadingIcon( false );
                         emailApp.setEmployeeList( data );
                     });
                 }
@@ -99,6 +114,7 @@
 
             // Initialize autocomplete
             initAutoComplete();
+            showInputLoadingIcon( false );
         });
     </script>
 

@@ -88,6 +88,13 @@ input[type=checkbox] {
     margin-top: 5px;
 }
 
+.send-form .icon-refresh-animate {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    animation-duration: 1s;
+}
+
 .send-form #email-app {
     height: 100%;
     width: 100%;

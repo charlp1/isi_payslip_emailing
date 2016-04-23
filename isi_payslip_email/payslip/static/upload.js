@@ -150,10 +150,12 @@ $(function () {
         uploadErrorStatus.html( "Failed: " + uploadStatusData.error + " / " + uploadStatusData.total );
 
         // Update missing payslip button, date, and list
-        failedToUploadDate = result.filename.split( "Payslip" )[ 0 ];
-        failedToUploadDate = failedToUploadDate ? failedToUploadDate.trim() : "";
-        missingPayslipDate.html( failedToUploadDate ).show();
-        missingPayslipButton.removeAttr( "disabled", "" );
+        failedToUploadDate = result && result.data ? result.data.payslip_name || "" : "";
+
+        if ( failedToUploadDate ) {
+            missingPayslipDate.html( failedToUploadDate ).show();
+            missingPayslipButton.removeAttr( "disabled", "" );
+        }
     };
 
     var initUploadResult = function() {

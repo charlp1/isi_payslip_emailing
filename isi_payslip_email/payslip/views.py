@@ -135,6 +135,7 @@ class PayslipUploadView(TemplateView):
                 payslip_folder.status = False
                 payslip_folder.save()
                 data = {
+                    'payslip_name': pf_name,
                     'payslip_id': payslip.pk,
                     'name': payslip.employee.name,
                     'filename': payslip.filename.name,
@@ -189,14 +190,18 @@ class PayslipSendAPIView(GenericAPIView):
         except Payslip.DoesNotExist:
             response.update({'message': 'No Payslip Record Found.'})
         else:
-            ps_name = payslip.payslip_folder.name.split('-')
-            d = date(int(ps_name[0]), int(ps_name[1]), int(ps_name[2]))
-            month_str = d.strftime('%B')
-            payslip_folder_str = '{0} {1}-{2}, {3}'.format(month_str, ps_name[2], ps_name[3], ps_name[0])
-            body_message = render_to_string('payslip/send_payslip_message.html', {'employee_name': payslip.employee.name,
-                                                                                  'duration': payslip_folder_str})
+            payslip_name = payslip.payslip_folder.name
+            # check format YYYY-MM-DD-DD
+            if re.match(r'\d{4}-\d{2}-\d{2}-\d{2}', payslip_name):
+                ps_name = payslip.payslip_folder.name.split('-')
+                d = date(int(ps_name[0]), int(ps_name[1]), int(ps_name[2]))
+                month_str = d.strftime('%B')
+                payslip_name = '{0} {1}-{2}, {3}'.format(month_str, ps_name[2], ps_name[3], ps_name[0])
 
-            email = EmailMultiAlternatives(subject='Payslip {}'.format(payslip_folder_str), body=body_message,
+            body_message = render_to_string('payslip/send_payslip_message.html', {'employee_name': payslip.employee.name,
+                                                                                  'payslip_name': payslip_name})
+
+            email = EmailMultiAlternatives(subject='Payslip {}'.format(payslip_name), body=body_message,
                                            from_email=settings.COMPANY_EMAIL, to=[payslip.employee.email],
                                            bcc=[payslip.employee.cc_email])
             payslip_employee_pdf = join(settings.MEDIA_ROOT, payslip.filename.path)

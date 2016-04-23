@@ -12,7 +12,7 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 class PayslipAdmin(admin.ModelAdmin):
     list_display = ['employee', 'filename', 'date_release', 'created']
-    search_fields = ['employee']
+    search_fields = ['filename']
 
 admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(Payslip, PayslipAdmin)

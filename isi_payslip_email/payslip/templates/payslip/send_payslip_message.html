@@ -10,19 +10,19 @@
     </div>
     <br/>
     <section style="font-size: 20px;">
-        {{ greetings }} <br /><br />
-        <p>{{ body_message }}</p>
+        {{ greetings|safe }} <br /><br />
+        <p>{{ body_message|safe }}</p>
     </section>
     <br />
     --
     <p>
-       <em>{{ disclaimer }}</em>
+       <em>{{ disclaimer|safe }}</em>
     </p>
     --
     <br />
     <address>
       <strong>{{ company_name }}</strong><br />
-        {{ company_address }}<br />
+        {{ company_address|safe }}<br />
         <abbr title="Website">Website: </abbr> {{ company_site }} <br />
         <abbr title="Email">Email:</abbr> {{ company_email }} <br />
         <abbr title="Phone">Tel. no.:</abbr> {{ company_phone }} <br />
